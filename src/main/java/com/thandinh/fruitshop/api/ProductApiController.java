@@ -141,7 +141,7 @@ public class ProductApiController {
                 product.getPrice(),
                 product.getPricesale(),
                 product.getQuantity(),
-                product.getImageUrl(),
+                product.getFullImageUrl(),  // Use fullImageUrl to auto-normalize paths
                 product.getCategory() != null ? product.getCategory().getId() : null,
                 product.getCategory() != null ? product.getCategory().getName() : null
         );

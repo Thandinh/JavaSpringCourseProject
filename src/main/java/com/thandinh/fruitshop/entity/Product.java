@@ -97,6 +97,34 @@ public class Product extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
+    /**
+     * Get the full image URL with proper path prefix.
+     * Automatically handles legacy image paths.
+     */
+    public String getFullImageUrl() {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return null;
+        }
+        
+        // If already has /uploads/ or /assets/ prefix, return as-is
+        if (imageUrl.startsWith("/uploads/") || imageUrl.startsWith("/assets/")) {
+            return imageUrl;
+        }
+        
+        // If starts with "uploads/", add leading slash
+        if (imageUrl.startsWith("uploads/")) {
+            return "/" + imageUrl;
+        }
+        
+        // If starts with "assets/", add leading slash
+        if (imageUrl.startsWith("assets/")) {
+            return "/" + imageUrl;
+        }
+        
+        // Otherwise, assume it's a legacy image in /assets/images/
+        return "/assets/images/" + imageUrl;
+    }
+
     public Category getCategory() {
         return category;
     }

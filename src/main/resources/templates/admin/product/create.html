@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Thêm Sản phẩm - Admin</title>
+  <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+  <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+<div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+<div id="main-wrapper">
+
+  <div th:replace="~{admin/fragments/header :: header}"></div>
+  <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+  <div class="content-body">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <a th:href="@{/admin/products}"><i style="font-size: 20px; padding: 15px;" class="fa-solid fa-arrow-left"></i></a>
+
+            <div class="card-header">
+              <h4 class="card-title">Thêm Sản phẩm Mới</h4>
+            </div>
+            <div class="card-body">
+              <div class="basic-form">
+                <form id="createProductForm" enctype="multipart/form-data">
+                  <div class="form-group">
+                    <label>Tên sản phẩm: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control input-default" id="name" name="name" placeholder="Nhập tên sản phẩm" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mô tả: </label>
+                    <textarea class="form-control" rows="4" id="description" name="description" placeholder="Nhập mô tả sản phẩm"></textarea>
+                  </div>
+
+                  <label>Hình ảnh: <span class="text-danger">*</span></label>
+                  <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Tải lên</span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*" required>
+                      <label class="custom-file-label">Chọn tệp</label>
+                    </div>
+                  </div>
+                  
+                  <!-- Image Preview -->
+                  <div id="imagePreview" class="form-group" style="display: none;">
+                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                  </div>
+
+                  <div class="form-group">
+                    <label>Giá gốc: <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" class="form-control input-default" id="price" name="price" placeholder="Nhập giá gốc (VND)" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Giá bán: <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" class="form-control input-default" id="pricesale" name="pricesale" placeholder="Nhập giá bán (VND)" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Số lượng: <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control input-default" id="quantity" name="quantity" placeholder="Nhập số lượng" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Danh mục: <span class="text-danger">*</span></label>
+                    <select class="form-control" id="categoryId" name="categoryId" required>
+                      <option value="">-- Chọn danh mục --</option>
+                      <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.name}">Danh mục</option>
+                    </select>
+                  </div>
+
+                  <button type="submit" id="submitBtn" class="btn btn-primary mb-2">
+                    <i class="fa fa-save"></i> <span id="btnText">Tạo sản phẩm</span>
+                    <span id="btnSpinner" class="spinner-border spinner-border-sm ml-2" style="display: none;"></span>
+                  </button>
+                  <a th:href="@{/admin/products}" class="btn btn-secondary mb-2"><i class="fa fa-times"></i> Hủy</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+<script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+<script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+<script th:src="@{/assets/admin/js/custom.min.js}"></script>
+<script th:src="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.js}"></script>
+
+<script>
+  // Image preview on file select
+  document.getElementById('thumbnail').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+          // Update file label
+          const fileName = file.name;
+          const nextSibling = e.target.nextElementSibling;
+          nextSibling.innerText = fileName;
+          
+          // Show image preview
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              document.getElementById('previewImg').src = e.target.result;
+              document.getElementById('imagePreview').style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+      }
+  });
+
+  // Form submit via AJAX
+  document.getElementById('createProductForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Disable submit button
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      
+      submitBtn.disabled = true;
+      btnText.textContent = 'Đang tạo...';
+      btnSpinner.style.display = 'inline-block';
+      
+      try {
+          // Prepare FormData
+          const formData = new FormData();
+          formData.append('name', document.getElementById('name').value);
+          formData.append('description', document.getElementById('description').value);
+          formData.append('price', document.getElementById('price').value);
+          formData.append('pricesale', document.getElementById('pricesale').value);
+          formData.append('quantity', document.getElementById('quantity').value);
+          formData.append('categoryId', document.getElementById('categoryId').value);
+          
+          const thumbnailFile = document.getElementById('thumbnail').files[0];
+          if (thumbnailFile) {
+              formData.append('thumbnail', thumbnailFile);
+          }
+          
+          // Send AJAX request
+          const response = await fetch('/api/admin/products', {
+              method: 'POST',
+              body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+              // Success notification
+              Swal.fire({
+                  type: 'success',
+                  title: 'Thành công!',
+                  text: result.message || 'Sản phẩm đã được tạo thành công',
+                  confirmButtonText: 'OK',
+                  timer: 2000
+              }).then(() => {
+                  // Redirect to products list
+                  window.location.href = '/admin/products';
+              });
+          } else {
+              throw new Error(result.message || 'Có lỗi xảy ra');
+          }
+          
+      } catch (error) {
+          // Error notification
+          Swal.fire({
+              type: 'error',
+              title: 'Lỗi!',
+              text: error.message || 'Không thể tạo sản phẩm. Vui lòng thử lại.',
+              confirmButtonText: 'OK'
+          });
+          
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          btnText.textContent = 'Tạo sản phẩm';
+          btnSpinner.style.display = 'none';
+      }
+  });
+</script>
+
+</body>
+
+</html>

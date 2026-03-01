@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sửa Sản phẩm - Admin</title>
+  <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+  <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+<div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+<div id="main-wrapper">
+
+  <div th:replace="~{admin/fragments/header :: header}"></div>
+  <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+  <div class="content-body">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <a th:href="@{/admin/products}"><i style="font-size: 20px; padding: 15px;" class="fa-solid fa-arrow-left"></i></a>
+
+            <div class="card-header">
+              <h4 class="card-title">Sửa Sản phẩm</h4>
+            </div>
+            <div class="card-body">
+              <div class="basic-form">
+                <form id="editProductForm" enctype="multipart/form-data">
+                  <input type="hidden" id="productId" th:value="${product.id}">
+                  <input type="hidden" id="oldImageUrl" th:value="${product.imageUrl}">
+
+                  <div class="form-group">
+                    <label>Tên sản phẩm: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control input-default" id="name" name="name" th:value="${product.name}" placeholder="Nhập tên sản phẩm" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Mô tả: </label>
+                    <textarea class="form-control" rows="4" id="description" name="description" placeholder="Nhập mô tả sản phẩm" th:text="${product.description}"></textarea>
+                  </div>
+
+                  <label>Hình ảnh hiện tại: </label> <br>
+                  <img id="currentImage" class="mb-2 rounded" 
+                       th:src="${product.fullImageUrl != null ? product.fullImageUrl : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22150%22 height=%22150%22%3E%3Crect fill=%22%23ddd%22 width=%22150%22 height=%22150%22/%3E%3Ctext fill=%22%23999%22 font-family=%22sans-serif%22 font-size=%2218%22 text-anchor=%22middle%22 x=%2275%22 y=%2275%22 dy=%22.3em%22%3EKhông có ảnh%3C/text%3E%3C/svg%3E'}" 
+                       width="150" height="150" 
+                       alt="Hình sản phẩm"
+                       style="object-fit: cover;">
+                  <div class="input-group form-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Tải ảnh mới</span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail" accept="image/*">
+                      <label class="custom-file-label">Chọn tệp để thay thế</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Giá gốc: <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" class="form-control input-default" id="price" name="price" th:value="${product.price}" placeholder="Nhập giá gốc (VND)" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Giá bán: <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" class="form-control input-default" id="pricesale" name="pricesale" th:value="${product.pricesale}" placeholder="Nhập giá bán (VND)" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Số lượng: <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control input-default" id="quantity" name="quantity" th:value="${product.quantity}" placeholder="Nhập số lượng" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Danh mục: <span class="text-danger">*</span></label>
+                    <select class="form-control" id="categoryId" name="categoryId" required>
+                      <option value="">-- Chọn danh mục --</option>
+                      <option th:each="category : ${categoryList}" 
+                              th:value="${category.id}" 
+                              th:text="${category.name}"
+                              th:selected="${product.category != null && category.id == product.category.id}">Danh mục</option>
+                    </select>
+                  </div>
+
+                  <button type="submit" id="submitBtn" class="btn btn-primary mb-2">
+                    <i class="fa fa-save"></i> <span id="btnText">Cập nhật</span>
+                    <span id="btnSpinner" class="spinner-border spinner-border-sm ml-2" style="display: none;"></span>
+                  </button>
+                  <a th:href="@{/admin/products}" class="btn btn-secondary mb-2"><i class="fa fa-times"></i> Hủy</a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+<script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+<script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+<script th:src="@{/assets/admin/js/custom.min.js}"></script>
+<script th:src="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.js}"></script>
+
+<script>
+  // Image preview on file select
+  document.getElementById('thumbnail').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+          // Update file label
+          const fileName = file.name;
+          const nextSibling = e.target.nextElementSibling;
+          nextSibling.innerText = fileName;
+          
+          // Show new image preview
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              document.getElementById('currentImage').src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+      }
+  });
+
+  // Form submit via AJAX
+  document.getElementById('editProductForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Disable submit button
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      
+      submitBtn.disabled = true;
+      btnText.textContent = 'Đang cập nhật...';
+      btnSpinner.style.display = 'inline-block';
+      
+      try {
+          const productId = document.getElementById('productId').value;
+          
+          // Prepare FormData
+          const formData = new FormData();
+          formData.append('name', document.getElementById('name').value);
+          formData.append('description', document.getElementById('description').value);
+          formData.append('price', document.getElementById('price').value);
+          formData.append('pricesale', document.getElementById('pricesale').value);
+          formData.append('quantity', document.getElementById('quantity').value);
+          formData.append('categoryId', document.getElementById('categoryId').value);
+          formData.append('oldImageUrl', document.getElementById('oldImageUrl').value);
+          
+          const thumbnailFile = document.getElementById('thumbnail').files[0];
+          if (thumbnailFile) {
+              formData.append('thumbnail', thumbnailFile);
+          }
+          
+          // Send AJAX request (PUT method)
+          const response = await fetch(`/api/admin/products/${productId}`, {
+              method: 'PUT',
+              body: formData
+          });
+          
+          const result = await response.json();
+          
+          if (result.success) {
+              // Success notification
+              Swal.fire({
+                  type: 'success',
+                  title: 'Thành công!',
+                  text: result.message || 'Sản phẩm đã được cập nhật thành công',
+                  confirmButtonText: 'OK',
+                  timer: 2000
+              }).then(() => {
+                  // Redirect to products list
+                  window.location.href = '/admin/products';
+              });
+          } else {
+              throw new Error(result.message || 'Có lỗi xảy ra');
+          }
+          
+      } catch (error) {
+          // Error notification
+          Swal.fire({
+              type: 'error',
+              title: 'Lỗi!',
+              text: error.message || 'Không thể cập nhật sản phẩm. Vui lòng thử lại.',
+              confirmButtonText: 'OK'
+          });
+          
+          // Re-enable submit button
+          submitBtn.disabled = false;
+          btnText.textContent = 'Cập nhật';
+          btnSpinner.style.display = 'none';
+      }
+  });
+</script>
+
+</body>
+
+</html>

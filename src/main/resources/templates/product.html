@@ -65,7 +65,7 @@
 
                     <div class="col l-6">
                         <div class="img">
-                            <img th:src="${product.imageUrl != null && !product.imageUrl.isEmpty() ? (product.imageUrl.startsWith('/') ? product.imageUrl : '/' + product.imageUrl) : '/assets/images/logo.webp'}" 
+                            <img th:src="${product.fullImageUrl != null ? product.fullImageUrl : '/assets/images/logo.webp'}" 
                                  th:alt="${product.name}"
                                  onerror="this.onerror=null; this.src='/assets/images/logo.webp';"
                                  style="max-width: 100%; height: auto; border: 2px solid #eee; border-radius: 8px;">

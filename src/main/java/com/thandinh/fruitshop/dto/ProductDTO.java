@@ -1,5 +1,7 @@
 package com.thandinh.fruitshop.dto;
 
+import java.time.LocalDateTime;
+
 public class ProductDTO {
     private Long id;
     private String name;
@@ -11,6 +13,8 @@ public class ProductDTO {
     private String imageUrl;
     private Long categoryId;
     private String categoryName;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ProductDTO() {}
 
@@ -107,5 +111,21 @@ public class ProductDTO {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -159,7 +159,7 @@
                    th:each="item : ${cart}">
 
                 <div class="item-image">
-                  <img th:src="${item.product.imageUrl != null && !item.product.imageUrl.isEmpty() ? (item.product.imageUrl.startsWith('/') || item.product.imageUrl.startsWith('http') ? item.product.imageUrl : '/' + item.product.imageUrl) : '/assets/images/logo.webp'}"
+                  <img th:src="${item.product.fullImageUrl != null ? item.product.fullImageUrl : '/assets/images/logo.webp'}"
                        th:alt="${item.product.name}"
                        onerror="this.onerror=null; this.src='/assets/images/logo.webp';">
                 </div>

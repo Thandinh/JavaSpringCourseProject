@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quản lý Sản phẩm - Admin</title>
+  <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+  <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+  <link th:href="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+<div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+<div id="main-wrapper">
+
+  <div th:replace="~{admin/fragments/header :: header}"></div>
+  <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+  <div class="content-body">
+    <div class="container-fluid">
+
+      <!-- Success/Error messages -->
+      <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Thành công!</strong> <span th:text="${successMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Lỗi!</strong> <span th:text="${errorMessage}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h4 class="card-title">Tất cả Sản phẩm <span th:if="${totalItems != null}" class="badge badge-primary" th:text="${totalItems}">0</span></h4>
+              <div>
+                <select class="form-control form-control-sm d-inline-block" style="width: auto; margin-right: 10px;" 
+                        onchange="window.location.href='/admin/products?page=0&size=' + this.value">
+                  <option th:value="5" th:selected="${pageSize == 5}">5 / trang</option>
+                  <option th:value="10" th:selected="${pageSize == 10}">10 / trang</option>
+                  <option th:value="20" th:selected="${pageSize == 20}">20 / trang</option>
+                  <option th:value="50" th:selected="${pageSize == 50}">50 / trang</option>
+                </select>
+                <a th:href="@{/admin/products/create}" class="btn btn-primary btn-sm">
+                  <i class="fa fa-plus"></i> Thêm mới
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead class="thead-primary">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Giá gốc</th>
+                    <th scope="col">Giá bán</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="product, iterStat : ${productList}">
+                    <th th:text="${currentPage * pageSize + iterStat.count}">1</th>
+                    <td>
+                      <img th:src="${product.fullImageUrl != null ? product.fullImageUrl : 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%23999%22 font-family=%22sans-serif%22 font-size=%2214%22 text-anchor=%22middle%22 x=%2250%22 y=%2250%22 dy=%22.3em%22%3EKhông có ảnh%3C/text%3E%3C/svg%3E'}" 
+                           width="80" height="80" 
+                           alt="Hình sản phẩm" 
+                           class="rounded"
+                           style="object-fit: cover;"
+                           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%23999%22 font-family=%22sans-serif%22 font-size=%2214%22 text-anchor=%22middle%22 x=%2250%22 y=%2250%22 dy=%22.3em%22%3EKhông có ảnh%3C/text%3E%3C/svg%3E'">
+                    </td>
+                    <td style="color: black;" th:text="${product.name}">Tên sản phẩm</td>
+                    <td style="color: black;">
+                      <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
+                    </td>
+                    <td style="color: black;">
+                      <span th:text="${#numbers.formatDecimal(product.pricesale, 0, 'COMMA', 0, 'POINT')}">0</span> ₫
+                    </td>
+                    <td style="color: black;" th:text="${product.quantity}">0</td>
+                    <td style="color: black;" th:text="${product.category != null ? product.category.name : 'N/A'}">Category</td>
+                    <td>
+                      <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-sm btn-warning">
+                        <i class="fa fa-edit"></i> Sửa
+                      </a>
+                      <button type="button" 
+                              class="btn btn-sm btn-danger delete-product-btn" 
+                              th:attr="data-id=${product.id}, data-name=${product.name}">
+                        <i class="fa fa-trash"></i> Xóa
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Pagination -->
+              <div th:if="${totalPages > 1}" class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <span>Hiển thị <strong th:text="${productList.size()}">0</strong> / <strong th:text="${totalItems}">0</strong> sản phẩm</span>
+                </div>
+                <nav aria-label="Page navigation">
+                  <ul class="pagination mb-0">
+                    <!-- Previous Button -->
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                      <a class="page-link" th:href="@{/admin/products(page=${currentPage - 1}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}" 
+                         aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+
+                    <!-- Page Numbers -->
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                        th:if="${i >= (currentPage - 2 > 0 ? currentPage - 2 : 0) && i <= (currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1)}"
+                        class="page-item" 
+                        th:classappend="${i == currentPage} ? 'active'">
+                      <a class="page-link" th:href="@{/admin/products(page=${i}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}" 
+                         th:text="${i + 1}">1</a>
+                    </li>
+
+                    <!-- Next Button -->
+                    <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                      <a class="page-link" th:href="@{/admin/products(page=${currentPage + 1}, size=${pageSize}, sortBy=${sortBy}, sortDir=${sortDir})}" 
+                         aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div th:replace="~{admin/fragments/footer :: footer}"></div>
+</div>
+<script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+<script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+<script th:src="@{/assets/admin/js/custom.min.js}"></script>
+<script th:src="@{/assets/admin/vendor/sweetalert2/dist/sweetalert2.min.js}"></script>
+
+<script>
+  // Delete product via AJAX
+  document.querySelectorAll('.delete-product-btn').forEach(button => {
+      button.addEventListener('click', async function() {
+          const productId = this.getAttribute('data-id');
+          const productName = this.getAttribute('data-name');
+          
+          // Confirmation dialog (SweetAlert2 v7 syntax)
+          const result = await Swal.fire({
+              title: 'Xác nhận xóa?',
+              text: `Bạn có chắc chắn muốn xóa sản phẩm "${productName}"? Hành động này không thể hoàn tác!`,
+              type: 'warning',  // v7 uses 'type' instead of 'icon'
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: 'Xóa',
+              cancelButtonText: 'Hủy'
+          });
+          
+          if (result.value) {  // v7 uses result.value instead of result.isConfirmed
+              try {
+                  // Show loading
+                  Swal.fire({
+                      title: 'Đang xóa...',
+                      text: 'Vui lòng đợi',
+                      allowOutsideClick: false,
+                      onOpen: () => {  // v7 uses onOpen instead of didOpen
+                          Swal.showLoading();
+                      }
+                  });
+                  
+                  // Send DELETE request
+                  const response = await fetch(`/api/admin/products/${productId}`, {
+                      method: 'DELETE',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      }
+                  });
+                  
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+                  
+                  const data = await response.json();
+                  
+                  if (data.success) {
+                      // Success notification
+                      Swal.fire({
+                          type: 'success',  // v7 uses 'type' instead of 'icon'
+                          title: 'Đã xóa!',
+                          text: data.message || 'Sản phẩm đã được xóa thành công',
+                          confirmButtonText: 'OK',
+                          timer: 2000
+                      }).then(() => {
+                          // Reload page to update list
+                          window.location.reload();
+                      });
+                  } else {
+                      throw new Error(data.message || 'Không thể xóa sản phẩm');
+                  }
+                  
+              } catch (error) {
+                  console.error('Delete error:', error);
+                  // Error notification
+                  Swal.fire({
+                      type: 'error',  // v7 uses 'type' instead of 'icon'
+                      title: 'Lỗi!',
+                      text: error.message || 'Không thể xóa sản phẩm. Vui lòng thử lại.',
+                      confirmButtonText: 'OK'
+                  });
+              }
+          }
+      });
+  });
+</script>
+
+</body>
+
+</html>
+                  });
+              }
+          }
+      });
+  });
+</script>
+
+</body>
+
+</html>

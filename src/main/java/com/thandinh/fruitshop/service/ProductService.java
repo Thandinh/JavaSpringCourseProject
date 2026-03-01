@@ -26,6 +26,13 @@ public class ProductService {
     }
 
     /**
+     * Get all products with pagination
+     */
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    /**
      * Find product by ID
      */
     public Optional<Product> findById(Long id) {
