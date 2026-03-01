@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<footer th:fragment="footer">
+
+  <div class="container">
+    <div>
+      <div class="footer-logo">
+        <a th:href="@{/trang-chu}">
+          <img th:src="@{/assets/images/logo.webp}" alt="Logo">
+        </a>
+      </div>
+
+      <div class="footer-info">
+        <h3>Công ty thực phẩm hữu cơ & tự nhiên Sea Fruits</h3>
+        <p>
+          Trụ sở chính: Toà nhà Ladeco, 266 Đội Cấn,
+          phường Liễu Giai, Quận Ba Đình, Hà Nội
+        </p>
+        <p>
+          Hotline:
+          <a href="tel:19006750">1900 6750</a>
+        </p>
+        <p>
+          Email:
+          <a href="mailto:coolteam@gmail.com">
+            coolteam@gmail.com
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="grid wide">
+      <div class="row box-footer">
+
+        <!-- VỀ CHÚNG TÔI -->
+        <div class="col l-3">
+          <div>
+            <h4>VỀ CHÚNG TÔI</h4>
+            <ul>
+              <li><a th:href="@{/trang-chu}">Trang chủ</a></li>
+              <li><a href="#">Giới thiệu</a></li>
+              <li><a th:href="@{/san-pham}">Sản phẩm</a></li>
+              <li><a href="#">Tin tức</a></li>
+              <li><a href="#">Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TIN KHUYẾN MÃI -->
+        <div class="col l-3">
+          <div>
+            <h4>TIN KHUYẾN MÃI</h4>
+            <ul>
+              <li><a th:href="@{/trang-chu}">Trang chủ</a></li>
+              <li><a href="#">Giới thiệu</a></li>
+              <li><a th:href="@{/san-pham}">Sản phẩm</a></li>
+              <li><a href="#">Tin tức</a></li>
+              <li><a href="#">Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DỊCH VỤ -->
+        <div class="col l-3">
+          <div>
+            <h4>DỊCH VỤ</h4>
+            <ul>
+              <li><a th:href="@{/trang-chu}">Trang chủ</a></li>
+              <li><a href="#">Giới thiệu</a></li>
+              <li><a th:href="@{/san-pham}">Sản phẩm</a></li>
+              <li><a href="#">Tin tức</a></li>
+              <li><a href="#">Liên hệ</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- SOCIAL & SUBSCRIBE -->
+        <div class="col l-3">
+          <div>
+            <h4>KẾT NỐI VỚI CHÚNG TÔI</h4>
+
+            <div class="box-social">
+              <div class="box-social__item">
+                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+              </div>
+              <div class="box-social__item">
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+              </div>
+              <div class="box-social__item">
+                <a href="#"><i class="fa-brands fa-google"></i></a>
+              </div>
+              <div class="box-social__item">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+              </div>
+              <div class="box-social__item">
+                <a href="#"><i class="fa-brands fa-youtube"></i></a>
+              </div>
+            </div>
+
+            <h4>NHẬN TIN KHUYẾN MÃI</h4>
+            <div class="form-nhantin">
+              <form method="post" th:action="@{/subscribe}">
+                <input type="email"
+                       name="email"
+                       placeholder="Nhập email của bạn"
+                       required>
+                <button type="submit">Đăng ký</button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-footer">
+    <p>
+      Bản quyền thuộc về
+      <a href="#">Sea Team</a>
+      | Cung cấp bởi
+      <a href="#">Sapo</a>
+    </p>
+  </div>
+
+</footer>
+
+</body>
+</html>

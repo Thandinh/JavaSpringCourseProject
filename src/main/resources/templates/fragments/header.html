@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+
+  <!-- STYLE -->
+  <style>
+    .avatar-dropdown,
+    .user-icon-wrapper {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid #2c6c36;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .avatar-dropdown { object-fit: cover; }
+
+    .user-icon {
+        font-size: 22px;
+        color: #2c6c36;
+    }
+
+    .avatar-dropdown:hover,
+    .user-icon-wrapper:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown { position: relative; display: inline-block; }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #fff;
+        min-width: 180px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        z-index: 999;
+    }
+
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .dropdown-content a {
+        color: #333;
+        padding: 10px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover { background-color: #f1f1f1; }
+  </style>
+
+
+  <!-- TOP HEADER -->
+  <div class="top-header container">
+    <div class="top-items">
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_1.webp}" alt="">
+          CÀ RỐT
+        </a>
+      </div>
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_2.webp}" alt="">
+          KHOAI TÂY
+        </a>
+      </div>
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_3.webp}" alt="">
+          DƯA HẤU
+        </a>
+      </div>
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_4.webp}" alt="">
+          TRÁI CAM
+        </a>
+      </div>
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_5.webp}" alt="">
+          ĐU ĐỦ
+        </a>
+      </div>
+      <div class="item">
+        <a href="">
+          <img class="p-3" th:src="@{/assets/images/header_6.webp}" alt="">
+          CÀ CHUA
+        </a>
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <!-- BODY HEADER -->
+  <div class="body-header container">
+    <div class="top-bar">
+
+      <!-- LOGO -->
+      <div>
+        <a th:href="@{/trang-chu}">
+          <img th:src="@{/assets/images/logo.webp}" alt="">
+        </a>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 20px;">
+
+        <!-- CHƯA LOGIN -->
+        <div th:if="${session.user == null}">
+          <a class="user" th:href="@{/dang-ky}">Đăng ký</a>
+          <span class="space">|</span>
+          <a class="user" th:href="@{/dang-nhap}">Đăng nhập</a>
+        </div>
+
+        <!-- ĐÃ LOGIN -->
+        <div th:if="${session.user != null}" class="dropdown">
+          <img th:src="${session.user.avatar != null && !session.user.avatar.isEmpty() ? (session.user.avatar.startsWith('/') || session.user.avatar.startsWith('http') ? session.user.avatar : '/' + session.user.avatar) : '/assets/images/uploads/avatar/default.jpg'}"
+               alt="Avatar"
+               class="avatar-dropdown"/>
+
+          <div class="dropdown-content" style="font-size:15px;">
+            <a th:href="@{/thong-tin-ca-nhan}">
+              Thông tin cá nhân
+            </a>
+            <a th:href="@{/dang-xuat}">
+              Đăng xuất
+            </a>
+          </div>
+        </div>
+
+
+        <!-- CART -->
+        <div class="cart-icon" style="margin-left: 0;">
+          <a th:href="@{/gio-hang}">
+            <i class="fas fa-shopping-cart cart-btn"></i>
+            <span class="cart-count"
+                  th:text="${countCart}">0</span>
+          </a>
+
+          <div class="mini-cart" id="miniCart"
+               th:if="${cart != null and !#lists.isEmpty(cart)}">
+
+            <div class="mini-cart-body">
+              <div class="cart-mini-item"
+                   th:each="item : ${cart}">
+
+                <div class="item-image">
+                  <img th:src="${item.product.imageUrl != null && !item.product.imageUrl.isEmpty() ? (item.product.imageUrl.startsWith('/') || item.product.imageUrl.startsWith('http') ? item.product.imageUrl : '/' + item.product.imageUrl) : '/assets/images/logo.webp'}"
+                       th:alt="${item.product.name}"
+                       onerror="this.onerror=null; this.src='/assets/images/logo.webp';">
+                </div>
+
+                <div class="item-info">
+                  <div class="item-name" th:text="${item.product.name}">
+                    Tên sản phẩm
+                  </div>
+                  
+                  <div class="item-price">
+                    <strong th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT')} + ' ₫'">0 ₫</strong>
+                    <span th:text="'x ' + ${item.quantity}">x 1</span>
+                  </div>
+                </div>
+
+                <form th:action="@{/gio-hang}" method="post" style="display: inline;">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="productId" th:value="${item.productId}">
+                  <button type="submit" class="close-item">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </form>
+
+              </div>
+            </div>
+
+            <div class="mini-cart-footer">
+              <div class="total-summary">
+                <span>Tổng tiền:</span>
+                <strong th:text="${#numbers.formatDecimal(totalCart,0,'COMMA',0,'POINT')} + ' ₫'">0 ₫</strong>
+              </div>
+              <a th:href="@{/gio-hang}" class="checkout-btn">
+                Tiến hành thanh toán
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+
+      <!-- CATEGORY -->
+      <div class="item item-category">
+        <h3>
+          <i class="fa-solid fa-bars-staggered"></i>
+          DANH MỤC SẢN PHẨM
+        </h3>
+
+        <div class="submenu">
+          <a th:each="category : ${categoryList}"
+             th:href="@{/san-pham-list(categoryId=${category.id})}"
+             th:text="${category.name}">
+          </a>
+        </div>
+      </div>
+
+      <!-- MENU -->
+      <ul class="item">
+        <li><a th:href="@{/trang-chu}">Trang chủ</a></li>
+        <li><a href="#">Giới thiệu</a></li>
+        <li><a th:href="@{/san-pham-list}">Sản phẩm</a></li>
+        <li><a href="#">Tin tức</a></li>
+        <li><a href="#">Liên hệ</a></li>
+      </ul>
+
+      <!-- SEARCH -->
+      <div class="item">
+        <form method="get" th:action="@{/san-pham-list}">
+          <input name="keyword"
+                 type="text"
+                 placeholder="Tìm sản phẩm..."
+                 th:value="${param.keyword}">
+          <button type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+</header>
+
+</body>
+</html>

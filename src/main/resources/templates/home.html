@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEA FRUITS</title>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" th:href="@{/assets/css/grid.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}" />
+
+    <style>
+        /* Category Tabs Styling */
+        .nav-tabs {
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            margin: 0 5px 10px;
+        }
+
+        .nav-link {
+            padding: 12px 25px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-weight: 500;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+        }
+
+        .nav-link:hover {
+            color: #2c6c36;
+        }
+
+        .nav-link.active {
+            color: #2c6c36;
+            border-bottom: 3px solid #2c6c36;
+            font-weight: 600;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
+
+    </head>
+
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div id="main">
+        <div id="banner">
+            <a href="">
+                <img th:src="@{/assets/images/slider_1.webp}" alt="" />
+            </a>
+        </div>
+
+        <div id="box-banners">
+            <div class="item">
+                <a href="">
+                    <img th:src="@{/assets/images/banner_1.webp}" alt="" />
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <img th:src="@{/assets/images/banner_2.webp}" alt="" />
+                </a>
+            </div>
+            <div class="item">
+                <a href="">
+                    <img th:src="@{/assets/images/banner_3.webp}" alt="" />
+                </a>
+            </div>
+        </div>
+
+        <div id="productsTab" class="container">
+            <h2 class="heading-box">SẢN PHẨM</h2>
+
+            <!-- Category Tabs -->
+            <ul class="nav nav-tabs" role="tablist" id="categoryTabs">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+                        Tất cả
+                    </button>
+                </li>
+                <!-- Categories will be loaded dynamically via API -->
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="grid wide products tab-content" id="productsTabContent">
+                <!-- All Products Tab -->
+                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                    <div class="row" id="allProductsContainer">
+                        <!-- Products will be loaded dynamically via API -->
+                        <div class="col-12 text-center">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category-specific Product Tabs will be generated dynamically -->
+            </div>
+        </div>
+
+        <div id="banner2">
+            <a href="">
+                <img th:src="@{/assets/images/banner.webp}" alt="" />
+            </a>
+        </div>
+
+        <div id="policy">
+            <div class="box container">
+                <div class="box-item">
+                    <div class="img-item">
+                        <img th:src="@{/assets/images/policy1.webp}" alt="" />
+                    </div>
+                    <h3>Giao hàng miễn phí</h3>
+                    <p>Với đơn hàng trên 300.000đ</p>
+                </div>
+                <div class="box-item">
+                    <div class="img-item">
+                        <img th:src="@{/assets/images/policy2.webp}" alt="" />
+                    </div>
+                    <h3>Hỗ trợ 24/7</h3>
+                    <p>Nhanh chóng thuận tiện</p>
+                </div>
+                <div class="box-item">
+                    <div class="img-item">
+                        <img th:src="@{/assets/images/policy3.webp}" alt="" />
+                    </div>
+                    <h3>Đổi trả trong 3 ngày</h3>
+                    <p>Hấp dẫn chưa từng có</p>
+                </div>
+                <div class="box-item">
+                    <div class="img-item">
+                        <img th:src="@{/assets/images/policy4.webp}" alt="" />
+                    </div>
+                    <h3>Giá tiêu chuẩn</h3>
+                    <p>Tiết kiệm 10% giá thị trường</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="products-trend">
+            <h2 class="heading-box">SẢN PHẨM TIN DÙNG</h2>
+
+            <div class="swiper mySwiper container">
+                <div class="swiper-wrapper container-slide" id="swiperProductsContainer">
+                    <!-- Products will be loaded dynamically via API -->
+                </div>
+
+                <!-- Pagination (dấu chấm) -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+
+        <div id="latest-news">
+            <h2 class="heading-box">TIN TỨC MỚI</h2>
+
+            <div class="container news-container">
+                <div class="grid wide">
+                    <div class="row">
+                        <div class="col l-6">
+                            <div class="news-item1">
+                                <a href="">
+                                    <img th:src="@{/assets/images/news1.webp}" alt="" />
+                                    <h3>Bí quyết bảo quản nho đen trong tủ lạnh tươi lâu hơn</h3>
+                                    <span><i class="fa-solid fa-user"></i> Bởi Sea Team</span>
+                                    <span><i class="fa-solid fa-calendar-days"></i> 18/02/2025</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col l-6">
+                            <div class="news-item">
+                                <a href="" class="news-item__box">
+                                    <div>
+                                        <img th:src="@{/assets/images/news2.webp}" alt="" />
+                                    </div>
+
+                                    <div class="news-item__boxTitle">
+                                        <h3>4 lý do bạn nên ăn dâu tây phòng tránh ung thư hiệu quả</h3>
+                                        <span><i class="fa-solid fa-user"></i> Bởi Sea Team</span>
+                                        <span><i class="fa-solid fa-calendar-days"></i> 18/02/2025</span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="news-item">
+                                <a href="" class="news-item__box">
+                                    <div>
+                                        <img th:src="@{/assets/images/news3.webp}" alt="" />
+                                    </div>
+
+                                    <div class="news-item__boxTitle">
+                                        <h3>Công dụng của chanh ngâm mật ong chữa ho hiệu quả</h3>
+                                        <span><i class="fa-solid fa-user"></i> Bởi Sea Team</span>
+                                        <span><i class="fa-solid fa-calendar-days"></i> 18/02/2025</span>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="news-item">
+                                <a href="" class="news-item__box">
+                                    <div>
+                                        <img th:src="@{/assets/images/news4.webp}" alt="" />
+                                    </div>
+
+                                    <div class="news-item__boxTitle">
+                                        <h3>Những loại trái cây Nhật đắt như vàng ròng đổ bộ về Việt Nam</h3>
+                                        <span><i class="fa-solid fa-user"></i> Bởi Sea Team</span>
+                                        <span><i class="fa-solid fa-calendar-days"></i> 18/02/2025</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="banner-ins">
+            <h2 class="heading-box">@Instagram</h2>
+            <a href="#">
+                <div>
+                    <img th:src="@{/assets/images/ins_1.webp}" alt="" />
+                    <img th:src="@{/assets/images/ins_2.webp}" alt="" />
+                    <img th:src="@{/assets/images/ins_3.webp}" alt="" />
+                    <img th:src="@{/assets/images/ins_4.webp}" alt="" />
+                    <img th:src="@{/assets/images/ins_5.webp}" alt="" />
+                    <img th:src="@{/assets/images/ins_6.webp}" alt="" />
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        // API Base URL
+        const API_BASE_URL = '/api';
+        let swiperInstance = null;
+
+        // Format number with thousand separator
+        function formatNumber(number) {
+            return new Intl.NumberFormat('vi-VN').format(number);
+        }
+
+        // Create product card HTML
+        function createProductCard(product) {
+            const detailUrl = (product.slug && product.slug !== '') ? `/san-pham/${product.slug}` : `/san-pham?id=${product.id}`;
+            
+            return `
+                <div class="col l-3 m-4 c-6">
+                    <div class="item">
+                        <div class="box-img">
+                            <a href="${detailUrl}" class="">
+                                <img src="${product.imageUrl || '/assets/images/default-product.jpg'}" alt="${product.name}" />
+                                <div class="hover-overlay">
+                                    <div class="hover-overlay__box-icon">
+                                        <div class="hover-overlay__eye">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </div>
+                                        <div class="hover-overlay__bag" onclick="">
+                                            <i class="fa-solid fa-bag-shopping"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <h3 class="nameProduct">
+                            <a href="${detailUrl}">${product.name}</a>
+                        </h3>
+                        <div>
+                            <span class="price-sale">${formatNumber(product.pricesale)} ₫</span>
+                            <del class="price">${formatNumber(product.price)} ₫</del>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Create swiper slide HTML
+        function createSwiperSlide(product) {
+            const detailUrl = (product.slug && product.slug !== '') ? `/san-pham/${product.slug}` : `/san-pham?id=${product.id}`;
+            
+            return `
+                <div class="swiper-slide">
+                    <a href="${detailUrl}" class="box-slide__item">
+                        <div class="">
+                            <img src="${product.imageUrl || '/assets/images/default-product.jpg'}" alt="${product.name}" />
+                        </div>
+                        <div class="box-slide__item-content">
+                            <h3>${product.name}</h3>
+                            <p>
+                                <span class="price-sale">${formatNumber(product.pricesale)} ₫</span>
+                                <del class="price">${formatNumber(product.price)} ₫</del>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+
+        // Load all categories
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/categories`);
+                const categories = await response.json();
+                
+                const categoryTabs = document.getElementById('categoryTabs');
+                const tabContent = document.getElementById('productsTabContent');
+                
+                categories.forEach(category => {
+                    // Create tab button
+                    const tabLi = document.createElement('li');
+                    tabLi.className = 'nav-item';
+                    tabLi.setAttribute('role', 'presentation');
+                    
+                    tabLi.innerHTML = `
+                        <button class="nav-link" 
+                                id="category-${category.id}-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#category-${category.id}" 
+                                data-category-id="${category.id}"
+                                type="button" 
+                                role="tab" 
+                                aria-controls="category-${category.id}" 
+                                aria-selected="false">
+                            ${category.name}
+                        </button>
+                    `;
+                    categoryTabs.appendChild(tabLi);
+                    
+                    // Create tab pane
+                    const tabPane = document.createElement('div');
+                    tabPane.className = 'tab-pane fade';
+                    tabPane.id = `category-${category.id}`;
+                    tabPane.setAttribute('role', 'tabpanel');
+                    tabPane.setAttribute('aria-labelledby', `category-${category.id}-tab`);
+                    tabPane.innerHTML = `
+                        <div class="row" id="category-${category.id}-container">
+                            <div class="col-12 text-center">
+                                <div class="spinner-border text-success" role="status">
+                                    <span class="visually-hidden">Đang tải...</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    tabContent.appendChild(tabPane);
+                });
+                
+                // Initialize tabs after creating them
+                initTabs();
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        // Load all products
+        async function loadAllProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                const products = await response.json();
+                
+                const container = document.getElementById('allProductsContainer');
+                container.innerHTML = products.map(product => createProductCard(product)).join('');
+                
+                // Initialize hover effects
+                HoverProducts();
+                
+                // Load swiper products
+                loadSwiperProducts(products);
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('allProductsContainer').innerHTML = 
+                    '<div class="col-12 text-center"><p class="text-danger">Lỗi tải sản phẩm</p></div>';
+            }
+        }
+
+        // Load products by category
+        async function loadProductsByCategory(categoryId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/category/${categoryId}`);
+                const products = await response.json();
+                
+                const container = document.getElementById(`category-${categoryId}-container`);
+                if (products.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center"><p>Không có sản phẩm nào</p></div>';
+                } else {
+                    container.innerHTML = products.map(product => createProductCard(product)).join('');
+                }
+                
+                // Initialize hover effects
+                HoverProducts();
+            } catch (error) {
+                console.error(`Error loading products for category ${categoryId}:`, error);
+                document.getElementById(`category-${categoryId}-container`).innerHTML = 
+                    '<div class="col-12 text-center"><p class="text-danger">Lỗi tải sản phẩm</p></div>';
+            }
+        }
+
+        // Load swiper products
+        function loadSwiperProducts(products) {
+            const container = document.getElementById('swiperProductsContainer');
+            container.innerHTML = products.slice(0, 10).map(product => createSwiperSlide(product)).join('');
+            
+            // Initialize or update swiper
+            if (swiperInstance) {
+                swiperInstance.destroy();
+            }
+            slideProducts();
+        }
+
+        // Tab Functionality
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show corresponding tab pane
+                    const targetId = this.getAttribute('data-bs-target');
+                    const targetPane = document.querySelector(targetId);
+                    if (targetPane) {
+                        targetPane.classList.add('show', 'active');
+                    }
+                    
+                    // Load products for category if not already loaded
+                    const categoryId = this.getAttribute('data-category-id');
+                    if (categoryId) {
+                        const container = document.getElementById(`category-${categoryId}-container`);
+                        if (container && container.querySelector('.spinner-border')) {
+                            loadProductsByCategory(categoryId);
+                        }
+                    }
+                    
+                    // Re-initialize hover effects
+                    HoverProducts();
+                });
+            });
+        }
+
+        function slideProducts() {
+            swiperInstance = new Swiper(".mySwiper", {
+                slidesPerView: 3,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+            });
+        }
+
+        function HoverProducts() {
+            const products = document.querySelectorAll(".products .item");
+
+            if (products) {
+                products.forEach((product) => {
+                    const nameElement = product.querySelector(".nameProduct");
+                    const boxImg = product.querySelector(".box-img");
+                    const overlay = product.querySelector(".hover-overlay");
+
+                    if (!overlay || !nameElement || !boxImg) return;
+
+                    // Clear any existing event listeners
+                    const newNameElement = nameElement.cloneNode(true);
+                    const newBoxImg = boxImg.cloneNode(true);
+                    
+                    nameElement.parentNode.replaceChild(newNameElement, nameElement);
+                    
+                    // Get the updated overlay after replacement
+                    const currentOverlay = product.querySelector(".hover-overlay");
+                    
+                    let hoverCount = 0;
+
+                    const showOverlay = function () {
+                        hoverCount++;
+                        currentOverlay.style.display = "flex";
+                    };
+
+                    const hideOverlay = function () {
+                        hoverCount--;
+                        if (hoverCount === 0) currentOverlay.style.display = "none";
+                    };
+
+                    product.querySelector(".nameProduct").addEventListener("mouseenter", showOverlay);
+                    product.querySelector(".nameProduct").addEventListener("mouseleave", hideOverlay);
+                    product.querySelector(".box-img").addEventListener("mouseenter", showOverlay);
+                    product.querySelector(".box-img").addEventListener("mouseleave", hideOverlay);
+                });
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener("DOMContentLoaded", async function () {
+            await loadCategories();
+            await loadAllProducts();
+        });
+    </script>
+</body>
+
+</html>

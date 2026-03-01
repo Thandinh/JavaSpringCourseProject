@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product != null ? product.name + ' - Chi tiết sản phẩm' : 'Chi tiết sản phẩm'}">Chi tiết sản phẩm</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/grid.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/product.css}">
+</head>
+<body>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <!-- Main Content -->
+    <div id="main-detail" th:if="${product != null}">
+        <div class="container">
+            <div class="navig">
+                <a th:href="@{/}">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a th:href="@{/san-pham-list}">Sản phẩm</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <a class="item active" href="#" th:text="${product.name}">Product Name</a>
+            </div>
+
+            <div class="grid wide">
+                <div class="row detail-product">
+                    <div class="col l-6">
+                        <div class="title" th:text="${product.name}">Product Name</div>
+
+                        <div class="sub-title">
+                            <div>Thương hiệu<span>: H-Food</span></div>
+                            <div>Tình trạng<span th:text="${product.quantity > 0 ? ': Còn hàng' : ': Hết hàng'}">: Còn hàng</span></div>
+                        </div>
+
+                        <div class="price">
+                            <span id="price-sale" th:text="${#numbers.formatInteger(product.pricesale, 0, 'COMMA')} + '₫'">0₫</span>
+                            <del id="price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '₫'">0₫</del>
+                        </div>
+
+                        <div class="description" th:utext="${product.description != null ? product.description : 'Chưa có mô tả'}">
+                            Mô tả sản phẩm
+                        </div>
+
+                        <form th:action="@{/gio-hang}" method="POST">
+                            <div class="add-to-cart">
+                                <input type="hidden" name="action" value="create">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="price" th:value="${product.pricesale}">
+                                <div class="quantity">
+                                    <button type="button" onclick="changeQuantity(-1)">-</button>
+                                    <input type="text" id="quantity" name="quantity" value="1" readonly>
+                                    <button type="button" onclick="changeQuantity(1)">+</button>
+                                </div>
+
+                                <button type="submit" class="btn-AddToCart" th:disabled="${product.quantity <= 0}">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <span th:text="${product.quantity > 0 ? 'Thêm vào giỏ hàng' : 'Hết hàng'}">Thêm vào giỏ hàng</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col l-6">
+                        <div class="img">
+                            <img th:src="${product.imageUrl != null && !product.imageUrl.isEmpty() ? (product.imageUrl.startsWith('/') ? product.imageUrl : '/' + product.imageUrl) : '/assets/images/logo.webp'}" 
+                                 th:alt="${product.name}"
+                                 onerror="this.onerror=null; this.src='/assets/images/logo.webp';"
+                                 style="max-width: 100%; height: auto; border: 2px solid #eee; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="spacing-footer"></div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function changeQuantity(amount) {
+            let quantityInput = document.querySelector('.add-to-cart .quantity input');
+            let currentQuantity = parseInt(quantityInput.value);
+            let newQuantity = currentQuantity + amount;
+            if (newQuantity > 0) {
+                quantityInput.value = newQuantity;
+            }
+        }
+    </script>
+</body>
+
+</html>

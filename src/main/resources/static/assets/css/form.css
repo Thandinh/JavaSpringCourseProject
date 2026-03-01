@@ -1,0 +1,89 @@
+#main {
+    margin-top: 80px;
+}
+
+
+
+
+.form {
+    text-align: center;
+}
+
+.form .title {
+    font-size: 26px;
+    font-weight: 400;
+    color: #252525;
+    text-align: center;
+    letter-spacing: .01em;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.regis-social img {
+    width: 129px;
+    height: 36.26px;
+    margin-bottom: 20px;
+}
+
+.form {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.form .form-group {
+    margin-bottom: 20px;
+}
+
+.form input {
+    min-height: 50px;
+    padding: 10px 25px;
+    color: #252525;
+    background-color: #fff;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid #ebebeb;
+    outline: none;
+    width: 100%;
+}
+
+.form .form-message {
+    font-size: 13.5px;
+    color: #f33a58;
+    display: block;
+    text-align: left;
+    padding-top: 4px;
+}
+
+.form-group.invalid input {
+    border-color: #f33a58;
+}
+
+.form .form-submit {
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: none;
+    border-radius: 0px;
+    padding: 0 35px;
+    height: 45px;
+    line-height: 45px;
+    background-color: #3b9048;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.form .form-submit:hover {
+    opacity: 0.9;
+}
+
+.heading-noAccount {
+    text-align: center;
+    color: #707070;
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.heading-noAccount a {
+    color: #3b9048;
+    text-decoration: underline;
+}

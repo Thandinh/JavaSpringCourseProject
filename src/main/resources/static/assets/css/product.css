@@ -1,0 +1,113 @@
+#main-detail {
+    margin-top: 80px;
+}
+
+#main-detail .detail-product {
+    margin-top: 40px;
+}
+
+#main-detail .detail-product .title {
+    width: 100%;
+    color: #252525;
+    font-size: 26px;
+    line-height: normal;
+    font-family: "Muli", sans-serif;
+    margin: 0px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+
+
+#main-detail .detail-product .img img {
+    height: 380px;
+    width: 380px;
+    object-fit: cover;
+    margin-left: 150px;
+    border-radius: 50%;
+}
+
+#main-detail .detail-product .sub-title {
+    display: flex;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecdddd;
+    margin-bottom: 20px;
+}
+
+#main-detail .detail-product .sub-title div {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #252525;
+}
+
+#main-detail .detail-product .sub-title div span {
+    color: #898989;
+}
+
+#main-detail .detail-product .price span {
+    font-size: 24px;
+    line-height: 30px;
+    display: inline-block;
+    color: #3b9048;
+    font-weight: 400;
+}
+
+#main-detail .detail-product .price del {
+    color: #acacac;
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+#main-detail .detail-product .description {
+    font-size: 14px;
+    color: #707070;
+    line-height: 22px;
+    margin-top: 20px;
+}
+
+#main-detail .add-to-cart {
+    display: flex;
+    align-items: center;
+    margin-top: 35px;
+}
+
+#main-detail .add-to-cart .quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#main-detail .add-to-cart .quantity button {
+    background: none;
+    border: none;
+    padding: 15px 15px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#main-detail .add-to-cart .quantity input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 20px;
+}
+
+.btn-AddToCart {
+    background: #3b9048;
+    color: #fff;
+    border: none;
+    padding: 15px 25px;
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-AddToCart i {
+    width: 16px;
+    margin-right: 10px;
+}

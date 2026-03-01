@@ -1,0 +1,239 @@
+#main {
+    margin-top: 80px;
+}
+
+.mb-35 {
+    margin-bottom: 35px;
+}
+
+.banner-col img {
+    width: 100%;
+}
+
+.allProducts .row-main {
+    margin-top: 35px;
+}
+
+.allProducts .header-allProducts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #3b9048;
+}
+
+.allProducts .header-allProducts h2 {
+    font-family: "Muli", sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 30px;
+    margin: 0;
+    color: #181b20;
+    background: #fff;
+    padding-right: 20px;
+}
+
+.allProducts .header-allProducts .sort-options {
+    font-weight: 400;
+    line-height: 33px;
+    font-size: 15px;
+    color: #181b20;
+
+}
+
+.allProducts .header-allProducts .sort-options select {
+    outline: none;
+    padding: 3px 8px;
+}
+
+.listPage {
+    padding: 10px;
+    text-align: center;
+    list-style: none;
+    margin-bottom: 90px;
+}
+
+.listPage li {
+    background-color: #f0f0f0;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    margin: 0 8px;
+    cursor: pointer;
+    color: #959292;
+    border-radius: 50%;
+    padding-top: 6px;
+    border: 1px solid #3b9048;
+
+}
+
+.listPage li:hover {
+    background-color: #3b9048;
+    color: #fff;
+}
+
+.listPage .active {
+    background-color: #3b9048;
+    color: #fff;
+}
+
+.allProducts .box .title {
+    height: 30px;
+    font-size: 18px;
+    line-height: 30px;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.allProducts .box .title::after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: #3b9048;
+    position: absolute;
+    left: 50%;
+    bottom: -3px;
+    transform: translateX(-50%);
+}
+
+.allProducts .box .content {
+    padding: 15px;
+    border: 1px solid #3b9048;
+}
+
+.allProducts .box-menu li,
+.allProducts .box-menu li a{
+    font-size: 14px;
+    color: #707070;
+    font-weight: 400;
+
+}
+
+.allProducts .box-menu li a:hover {
+    color: #3b9048;
+}
+
+.allProducts .box-menu li a.active {
+    color: #3b9048;
+    font-weight: 600;
+}
+
+.allProducts .box-menu li {
+    padding: 3px 0;
+}
+
+.row.products {
+
+}
+
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Tạo khoảng cách giữa checkbox và chữ */
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    font-size: 14px;
+    color: #707070;
+    margin-bottom: 10px;
+}
+
+.custom-checkbox:hover {
+    color: #3b9048;
+}
+
+
+/* Ẩn input nhưng vẫn cho phép click */
+.custom-checkbox input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Ẩn đi nhưng vẫn nhận sự kiện click */
+    cursor: pointer;
+    z-index: 2; /* Đảm bảo input nằm trên cùng để nhận sự kiện */
+}
+
+/* Tạo checkbox tùy chỉnh */
+.custom-checkbox span {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #3b9048;
+    border-radius: 5px;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Khi checkbox được chọn, thay đổi màu nền và thêm dấu check */
+.custom-checkbox input:checked + span {
+    background: #3b9048;
+}
+
+.custom-checkbox input:checked + span::after {
+    content: "✔";
+    font-size: 13px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+}
+
+
+
+
+
+.color-picker {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-option {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.color-option input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Ẩn input */
+    cursor: pointer;
+}
+
+.color-option span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: block;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Màu sắc cho từng nút */
+.yellow span { background: #f1c40f; }
+.purple span { background: #8e44ad; }
+.red span { background: #e74c3c; }
+.green span { background: #2ecc71; }
+.pink span { background: #ff00ff; }
+.orange span { background: #e67e22; }
+
+/* Khi radio được chọn, nút phóng to */
+.color-option input:checked + span {
+    transform: scale(1.2);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
