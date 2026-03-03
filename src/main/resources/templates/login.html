@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Fruitshop</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/grid.css">
+    <link rel="stylesheet" href="assets/css/form.css">
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div id="main" class="register">
+    <div class="container">
+        <div class="navig">
+            <a href="trang-chu">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a class="item active" href="">Đăng nhập tài khoản</a>
+        </div>
+
+        <form th:action="@{/dang-nhap}" id="login-form" class="form" method="post">
+            <h2 class="title">ĐĂNG NHẬP TÀI KHOẢN</h2>
+            
+            <div th:if="${successMessage != null}" class="alert alert-success" style="padding: 10px; margin-bottom: 15px; background: #d4edda; color: #155724; border-radius: 5px;">
+                <span th:text="${successMessage}"></span>
+            </div>
+
+            <div th:if="${error != null}" class="alert alert-danger" style="padding: 10px; margin-bottom: 15px; background: #f8d7da; color: #721c24; border-radius: 5px;">
+                Email hoặc mật khẩu không đúng!
+            </div>
+
+            <div class="form-group">
+                <input name="email" type="email" rules="required|email" placeholder="Email" required>
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <input name="password" type="password" rules="required|min:3" placeholder="Mật khẩu" required>
+                <span class="form-message"></span>
+            </div>
+
+            <button type="submit" class="form-submit">Đăng nhập</button>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <p>Chưa có tài khoản? <a href="dang-ky" style="color: #7fad39; font-weight: 600;">Đăng ký ngay</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="spacing-footer"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    // Cập nhật số lượng giỏ hàng
+    let productsCart = JSON.parse(localStorage.getItem('productscart')) || [];
+    if (document.querySelector('.cart-count')) {
+        document.querySelector('.cart-count').innerText = productsCart.length;
+    }
+
+    // Form validation
+    new Validator('#login-form');
+
+    function Validator(formSelector) {
+        const _this = this;
+        let formRules = {};
+
+        function getParent(element, selector) {
+            while (element.parentElement) {
+                if (element.parentElement.matches(selector)) {
+                    return element.parentElement;
+                }
+                element = element.parentElement;
+            }
+        }
+
+        const validatorRules = {
+            required: function (value) {
+                return value ? undefined : 'Vui lòng nhập trường này';
+            },
+            email: function (value) {
+                const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                return regex.test(value) ? undefined : 'Vui lòng nhập email hợp lệ';
+            },
+            min: function (min) {
+                return function (value) {
+                    return value.length >= min ? undefined : `Vui lòng nhập ít nhất ${min} ký tự`;
+                }
+            }
+        };
+
+        const formElement = document.querySelector(formSelector);
+
+        if (formElement) {
+            let inputs = formElement.querySelectorAll('[name][rules]');
+
+            for (let input of inputs) {
+                let rules = input.getAttribute('rules').split('|');
+
+                for (let rule of rules) {
+                    let isRuleHasValue = rule.includes(':');
+                    let ruleInfo;
+
+                    if (isRuleHasValue) {
+                        ruleInfo = rule.split(':');
+                        rule = ruleInfo[0];
+                    }
+
+                    let ruleFunc = validatorRules[rule];
+
+                    if (isRuleHasValue) {
+                        ruleFunc = validatorRules[rule](ruleInfo[1]);
+                    }
+
+                    if (Array.isArray(formRules[input.name])) {
+                        formRules[input.name].push(ruleFunc);
+                    } else {
+                        formRules[input.name] = [ruleFunc];
+                    }
+                }
+
+                input.onblur = handleValidate;
+                input.oninput = handleClearError;
+            }
+
+            function handleValidate(event) {
+                let rules = formRules[event.target.name];
+                let errorMessage;
+
+                for (let i = 0; i < rules.length; i++) {
+                    errorMessage = rules[i](event.target.value);
+                    if (errorMessage) break;
+                }
+
+                if (errorMessage) {
+                    let formGroup = getParent(event.target, '.form-group');
+                    if (formGroup) {
+                        let formMessage = formGroup.querySelector('.form-message');
+                        if (formMessage) {
+                            formMessage.innerText = errorMessage;
+                            formGroup.classList.add('invalid');
+                        }
+                    }
+                }
+                return errorMessage;
+            }
+
+            function handleClearError(event) {
+                let formGroup = getParent(event.target, '.form-group');
+                if (formGroup.classList.contains('invalid')) {
+                    formGroup.classList.remove('invalid');
+                    let formMessage = formGroup.querySelector('.form-message');
+                    if (formMessage) {
+                        formMessage.innerText = '';
+                    }
+                }
+            }
+
+            formElement.onsubmit = function (event) {
+                event.preventDefault();
+
+                const inputs = formElement.querySelectorAll('[name][rules]');
+                let isValid = true;
+
+                for (let input of inputs) {
+                    if (handleValidate({ target: input })) {
+                        isValid = false;
+                    }
+                }
+
+                if (isValid) {
+                    formElement.submit();
+                }
+            }
+        }
+    }
+</script>
+</body>
+
+</html>

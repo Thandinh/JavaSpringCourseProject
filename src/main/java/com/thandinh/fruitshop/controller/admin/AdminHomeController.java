@@ -16,7 +16,7 @@ public class AdminHomeController {
     @Autowired
     private DashboardService dashboardService;
 
-    @GetMapping("/admin-home")
+    @GetMapping({"/dashboard", ""})
     public String adminHome(Model model) {
         // Lấy tất cả thống kê từ service
         Map<String, Object> stats = dashboardService.getDashboardStatistics();

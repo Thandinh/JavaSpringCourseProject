@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký - Fruitshop</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/grid.css">
+  <link rel="stylesheet" href="assets/css/form.css">
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div id="main" class="register">
+  <div class="container">
+    <div class="navig">
+      <a href="trang-chu">Trang chủ</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a class="item active" href="">Đăng ký tài khoản</a>
+    </div>
+
+    <form th:action="@{/dang-ky}" th:object="${registerDTO}" id="register-form" class="form" method="post">
+      <h2 class="title">ĐĂNG KÝ TÀI KHOẢN</h2>
+
+      <!-- Hiển thị thông báo lỗi -->
+      <div th:if="${errorEmail}" class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #f5c6cb;">
+        <i class="fas fa-exclamation-circle"></i> <span th:text="${errorEmail}"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{fullName}" type="text" rules="required|min:3" placeholder="Họ và tên" required>
+        <span class="form-message"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{email}" type="email" rules="required|email|gmail" placeholder="Email (phải là Gmail)" required>
+        <span class="form-message"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{phone}" type="text" rules="phone" placeholder="Số điện thoại (tùy chọn)">
+        <span class="form-message"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{address}" type="text" placeholder="Địa chỉ (tùy chọn)">
+        <span class="form-message"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{password}" type="password" rules="required|min:6" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required>
+        <span class="form-message"></span>
+      </div>
+
+      <div class="form-group">
+        <input th:field="*{passwordConfirmation}" type="password" rules="required|confirm:input[name='password']"
+               placeholder="Nhập lại mật khẩu" required>
+        <span class="form-message"></span>
+      </div>
+
+      <button type="submit" class="form-submit">Đăng ký</button>
+      
+      <div style="text-align: center; margin-top: 15px;">
+        <p>Đã có tài khoản? <a href="dang-nhap" style="color: #7fad39; font-weight: 600;">Đăng nhập ngay</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="spacing-footer"></div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+
+<script th:inline="javascript">
+  // Cập nhật số lượng giỏ hàng
+  let productsCart = JSON.parse(localStorage.getItem('productscart')) || [];
+  if (document.querySelector('.cart-count')) {
+      document.querySelector('.cart-count').innerText = productsCart.length;
+  }
+
+  // Form validation
+  new Validator('#register-form');
+
+  function Validator(formSelector) {
+      const _this = this;
+      let formRules = {};
+
+      function getParent(element, selector) {
+          while (element.parentElement) {
+              if (element.parentElement.matches(selector)) {
+                  return element.parentElement;
+              }
+              element = element.parentElement;
+          }
+      }
+
+      const validatorRules = {
+          required: function (value) {
+              return value ? undefined : 'Vui lòng nhập trường này';
+          },
+          email: function (value) {
+              const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+              return regex.test(value) ? undefined : 'Vui lòng nhập email hợp lệ';
+          },
+          gmail: function (value) {
+              const gmailRegex = /^[A-Za-z0-9._%+-]+@gmail\.com$/i;
+              return gmailRegex.test(value) ? undefined : 'Vui lòng sử dụng địa chỉ Gmail (@gmail.com)';
+          },
+          phone: function (value) {
+              if (!value || value.trim() === '') return undefined; // Tùy chọn
+              const phoneRegex = /^[0-9]{10,11}$/;
+              return phoneRegex.test(value) ? undefined : 'Số điện thoại không hợp lệ (10-11 chữ số)';
+          },
+          min: function (min) {
+              return function (value) {
+                  return value.length >= min ? undefined : `Vui lòng nhập ít nhất ${min} ký tự`;
+              }
+          },
+          confirm: function (selectorPassword) {
+              return function (value) {
+                  let confirmValue = document.querySelector(selectorPassword).value;
+                  return value === confirmValue ? undefined : 'Mật khẩu nhập lại không khớp';
+              }
+          }
+      };
+
+      const formElement = document.querySelector(formSelector);
+
+      if (formElement) {
+          let inputs = formElement.querySelectorAll('[name][rules]');
+
+          for (let input of inputs) {
+              let rules = input.getAttribute('rules').split('|');
+
+              for (let rule of rules) {
+                  let isRuleHasValue = rule.includes(':');
+                  let ruleInfo;
+
+                  if (isRuleHasValue) {
+                      ruleInfo = rule.split(':');
+                      rule = ruleInfo[0];
+                  }
+
+                  let ruleFunc = validatorRules[rule];
+
+                  if (isRuleHasValue) {
+                      ruleFunc = validatorRules[rule](ruleInfo[1]);
+                  }
+
+                  if (Array.isArray(formRules[input.name])) {
+                      formRules[input.name].push(ruleFunc);
+                  } else {
+                      formRules[input.name] = [ruleFunc];
+                  }
+              }
+
+              input.onblur = handleValidate;
+              input.oninput = handleClearError;
+          }
+
+          function handleValidate(event) {
+              let rules = formRules[event.target.name];
+              let errorMessage;
+
+              for (let i = 0; i < rules.length; i++) {
+                  errorMessage = rules[i](event.target.value);
+                  if (errorMessage) break;
+              }
+
+              if (errorMessage) {
+                  let formGroup = getParent(event.target, '.form-group');
+                  if (formGroup) {
+                      let formMessage = formGroup.querySelector('.form-message');
+                      if (formMessage) {
+                          formMessage.innerText = errorMessage;
+                          formGroup.classList.add('invalid');
+                      }
+                  }
+              }
+              return errorMessage;
+          }
+
+          function handleClearError(event) {
+              let formGroup = getParent(event.target, '.form-group');
+              if (formGroup.classList.contains('invalid')) {
+                  formGroup.classList.remove('invalid');
+                  let formMessage = formGroup.querySelector('.form-message');
+                  if (formMessage) {
+                      formMessage.innerText = '';
+                  }
+              }
+          }
+
+          formElement.onsubmit = function (event) {
+              event.preventDefault();
+
+              const inputs = formElement.querySelectorAll('[name][rules]');
+              let isValid = true;
+
+              for (let input of inputs) {
+                  if (handleValidate({ target: input })) {
+                      isValid = false;
+                  }
+              }
+
+              if (isValid) {
+                  formElement.submit();
+              }
+          }
+      }
+  }
+</script>
+</body>
+
+</html>

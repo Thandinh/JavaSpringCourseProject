@@ -128,18 +128,27 @@
 
         <!-- ĐÃ LOGIN -->
         <div th:if="${session.user != null}" class="dropdown">
-          <img th:src="${session.user.avatar != null && !session.user.avatar.isEmpty() ? (session.user.avatar.startsWith('/') || session.user.avatar.startsWith('http') ? session.user.avatar : '/' + session.user.avatar) : '/assets/images/uploads/avatar/default.jpg'}"
+          <img th:if="${session.user.avatar != null and !session.user.avatar.isEmpty()}"
+               th:src="@{${session.user.avatar}}"
                alt="Avatar"
                class="avatar-dropdown"/>
+          <div th:unless="${session.user.avatar != null and !session.user.avatar.isEmpty()}"
+               class="user-icon-wrapper">
+            <i class="fas fa-user user-icon"></i>
+          </div>
 
           <div class="dropdown-content" style="font-size:15px;">
             <a th:href="@{/thong-tin-ca-nhan}">
-              Thông tin cá nhân
+              <i class="fas fa-user-circle"></i> Thông tin cá nhân
             </a>
-            <a th:href="@{/dang-xuat}">
-              Đăng xuất
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              <i class="fas fa-sign-out-alt"></i> Đăng xuất
             </a>
           </div>
+          
+          <!-- Hidden logout form -->
+          <form id="logout-form" th:action="@{/dang-xuat}" method="post" style="display: none;">
+          </form>
         </div>
 
 

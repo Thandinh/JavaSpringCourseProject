@@ -12,21 +12,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Get the absolute path to the uploads directory (for new uploads)
-        Path uploadDir = Paths.get("uploads").toAbsolutePath().normalize();
-        String uploadPath = uploadDir.toUri().toString();
-        
-        // Map /uploads/** URLs to the uploads directory (for new products)
+        // Map /uploads/** to BOTH classpath (for user avatars) AND external directory (for products)
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations(uploadPath);
+                .addResourceLocations(
+                    "classpath:/static/uploads/",  // For user avatars
+                    "file:uploads/"                 // For product images (external)
+                );
         
-        System.out.println("Upload directory configured: " + uploadPath);
+        System.out.println("Upload directory configured: classpath:/static/uploads/ and file:uploads/");
         
         // Also serve static resources from classpath (for old products)
         // This allows /assets/images/** to work for existing products
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/assets/");
         
-        System.out.println("Static assets directory configured for old products");
+        System.out.println("Static assets directory configured");
     }
 }

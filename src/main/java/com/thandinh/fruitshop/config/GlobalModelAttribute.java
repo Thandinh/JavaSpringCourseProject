@@ -1,9 +1,13 @@
 package com.thandinh.fruitshop.config;
 
+import com.thandinh.fruitshop.entity.User;
+import com.thandinh.fruitshop.repository.UserRepository;
 import com.thandinh.fruitshop.service.CartService;
 import com.thandinh.fruitshop.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +21,9 @@ public class GlobalModelAttribute {
     
     @Autowired
     private CartService cartService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     public GlobalModelAttribute(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -26,6 +33,20 @@ public class GlobalModelAttribute {
     public void commonData(Model model, HttpSession session) {
         // Category list
         model.addAttribute("categoryList", categoryService.findAll());
+        
+        // Get authenticated user from Spring Security
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() 
+                && !"anonymousUser".equals(authentication.getPrincipal())) {
+            String email = authentication.getName();
+            User user = userRepository.findByEmail(email).orElse(null);
+            if (user != null) {
+                session.setAttribute("user", user);
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("userEmail", user.getEmail());
+                session.setAttribute("userFullName", user.getFullName());
+            }
+        }
         
         // Cart data - always recalculate to ensure accuracy
         List<CartService.CartItem> cart = cartService.getCart(session);

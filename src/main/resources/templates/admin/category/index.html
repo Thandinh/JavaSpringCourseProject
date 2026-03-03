@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quản lý danh mục - SEA FRUITS Admin</title>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+    <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        .action-btn {
+            border: none;
+            padding: 5px 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .btn-edit {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #6c757d;
+        }
+        .category-count {
+            font-size: 14px;
+            color: #6c757d;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+    <div id="main-wrapper">
+
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <div class="content-body">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class="card-title mb-0">
+                                        Quản lý danh mục
+                                        <span class="category-count" th:if="${totalCategories != null}">
+                                            (<span th:text="${totalCategories}">0</span> danh mục)
+                                        </span>
+                                    </h4>
+                                </div>
+                                <a th:href="@{/admin/categories/create}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-plus"></i> Thêm danh mục mới
+                                </a>
+                            </div>
+                            
+                            <div class="card-body">
+                                <!-- Success/Error Messages -->
+                                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Thành công!</strong> <span th:text="${success}"></span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Lỗi!</strong> <span th:text="${error}"></span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <!-- Category Table -->
+                                <div class="table-responsive" th:if="${categoryList != null and !categoryList.isEmpty()}">
+                                    <table class="table table-hover verticle-middle">
+                                        <thead class="thead-primary">
+                                            <tr>
+                                                <th scope="col" style="width: 80px;">#</th>
+                                                <th scope="col">Tên danh mục</th>
+                                                <th scope="col" style="width: 150px;">Số sản phẩm</th>
+                                                <th scope="col" style="width: 200px;" class="text-center">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="category, iterStat : ${categoryList}">
+                                                <th scope="row" th:text="${iterStat.count}">1</th>
+                                                <td>
+                                                    <strong th:text="${category.name}">Category Name</strong>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${category.products != null ? category.products.size() : 0}">0</span> sản phẩm
+                                                </td>
+                                                <td class="text-center">
+                                                    <a th:href="@{/admin/categories/edit/{id}(id=${category.id})}" 
+                                                       class="action-btn btn-edit" title="Chỉnh sửa">
+                                                        <i class="fa fa-edit"></i> Sửa
+                                                    </a>
+                                                    <form th:action="@{/admin/categories/delete/{id}(id=${category.id})}" 
+                                                          method="post" 
+                                                          style="display: inline;"
+                                                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                                        <button type="submit" class="action-btn btn-delete" title="Xóa">
+                                                            <i class="fa fa-trash"></i> Xóa
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <!-- Empty State -->
+                                <div class="empty-state" th:if="${categoryList == null or categoryList.isEmpty()}">
+                                    <i class="fa fa-folder-open" style="font-size: 64px; color: #ddd;"></i>
+                                    <h5 class="mt-3">Chưa có danh mục nào</h5>
+                                    <p class="text-muted">Hãy tạo danh mục đầu tiên để bắt đầu</p>
+                                    <a th:href="@{/admin/categories/create}" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i> Thêm danh mục mới
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div th:replace="~{admin/fragments/footer :: footer}"></div>
+    </div>
+    
+    <script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+    <script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+    <script th:src="@{/assets/admin/js/custom.min.js}"></script>
+    <script src="<c:url value='/assets/admin/vendor/chart.js/Chart.bundle.min.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/gaugeJS/dist/gauge.min.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/flot/jquery.flot.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/flot/jquery.flot.resize.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/owl-carousel/js/owl.carousel.min.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/jqvmap/js/jquery.vmap.min.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/jqvmap/js/jquery.vmap.usa.js' />"></script>
+    <script src="<c:url value='/assets/admin/vendor/jquery.counterup/jquery.counterup.min.js' />"></script>
+
+    <script src="<c:url value='/assets/admin/js/dashboard/dashboard-1.js' />"></script>
+
+
+
+</body>
+
+</html>

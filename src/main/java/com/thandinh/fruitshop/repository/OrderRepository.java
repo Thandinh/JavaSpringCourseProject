@@ -1,6 +1,7 @@
 package com.thandinh.fruitshop.repository;
 
 import com.thandinh.fruitshop.entity.Order;
+import com.thandinh.fruitshop.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,11 +29,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Đếm số đơn hàng theo trạng thái
     @Query("SELECT COUNT(o) FROM Order o WHERE o.status = :status")
-    Long countByStatus(@Param("status") String status);
+    Long countByStatus(@Param("status") OrderStatus status);
 
     // Lấy tổng doanh thu đã hoàn thành
-    @Query("SELECT COALESCE(SUM(o.totalAmount), 0.0) FROM Order o WHERE o.status = 'COMPLETED'")
-    Double getTotalCompletedRevenue();
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0.0) FROM Order o WHERE o.status = :status")
+    Double getTotalRevenueByStatus(@Param("status") OrderStatus status);
 
     // Lấy danh sách đơn hàng gần nhất
     @Query("SELECT o FROM Order o ORDER BY o.orderDate DESC")

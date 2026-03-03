@@ -88,7 +88,20 @@
 
                     <div class="button-cart">
                         <button onclick="window.location.href='/san-pham-list'">Tiếp tục mua hàng</button>
-                        <button onclick="window.location.href='/dat-hang'" class="btn-checkout">Tiến hành thanh toán</button>
+                        
+                        <!-- Nếu đã đăng nhập: cho thanh toán -->
+                        <button th:if="${session.user != null}" 
+                                onclick="window.location.href='/dat-hang'" 
+                                class="btn-checkout">
+                            Tiến hành thanh toán
+                        </button>
+                        
+                        <!-- Nếu chưa đăng nhập: yêu cầu đăng nhập -->
+                        <button th:unless="${session.user != null}" 
+                                onclick="if(confirm('Bạn cần đăng nhập để thanh toán. Đăng nhập ngay?')) { window.location.href='/dang-nhap'; }" 
+                                class="btn-checkout">
+                            Đăng nhập để thanh toán
+                        </button>
                     </div>
                 </div>
             

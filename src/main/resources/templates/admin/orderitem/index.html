@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Order Details - Admin</title>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+    <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+    
+    <div id="main-wrapper">
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <div class="content-body">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <span th:text="${success}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${error}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <a th:href="@{/admin/orders}">
+                                <i style="font-size: 20px; padding: 15px;" class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class="card-title mb-2">Order Details: 
+                                        <b style="color: #593bdb;">
+                                            <i th:text="${code}"></i>
+                                        </b>
+                                    </h4>
+                                    <div th:if="${order != null}">
+                                        <span class="badge" 
+                                              th:classappend="${order.status.toString() == 'COMPLETED' ? 'badge-success' : 
+                                                             order.status.toString() == 'PENDING' ? 'badge-warning' : 
+                                                             order.status.toString() == 'CONFIRMED' ? 'badge-info' : 
+                                                             order.status.toString() == 'SHIPPING' ? 'badge-primary' : 
+                                                             'badge-danger'}"
+                                              th:text="${order.status}"></span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a th:href="@{/admin/orders/edit/{id}(id=${order != null ? order.id : ''})}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fa fa-edit"></i> Edit Status
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Information -->
+                            <div class="card-body" th:if="${order != null}">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3">Customer Information</h5>
+                                        <table class="table table-borderless">
+                                            <tr>
+                                                <td><strong>Customer Email:</strong></td>
+                                                <td th:text="${order.user.email}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Full Name:</strong></td>
+                                                <td th:text="${order.fullName}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Phone:</strong></td>
+                                                <td th:text="${order.phone}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Address:</strong></td>
+                                                <td th:text="${order.address}"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3">Order Information</h5>
+                                        <table class="table table-borderless">
+                                            <tr>
+                                                <td><strong>Order Date:</strong></td>
+                                                <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Total Amount:</strong></td>
+                                                <td>
+                                                    <span class="text-danger font-weight-bold" 
+                                                          th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></span>₫
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${order.note != null && !order.note.isEmpty()}">
+                                                <td><strong>Note:</strong></td>
+                                                <td th:text="${order.note}"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <!-- Order Items Table -->
+                                <h5 class="mb-3">Order Items</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead class="thead-primary">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Product Image</th>
+                                                <th scope="col">Product Name</th>
+                                                <th scope="col">Unit Price</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${orderItems == null || orderItems.isEmpty()}">
+                                                <td colspan="6" class="text-center">No items found for this order</td>
+                                            </tr>
+                                            <tr th:each="item, iterStat : ${orderItems}">
+                                                <th scope="row" th:text="${iterStat.count}"></th>
+                                                <td>
+                                                    <img th:if="${item.product.fullImageUrl != null}"
+                                                         th:src="@{${item.product.fullImageUrl}}" 
+                                                         alt="Product image" 
+                                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                                    <img th:unless="${item.product.fullImageUrl != null}"
+                                                         th:src="@{/assets/images/no-image.png}" 
+                                                         alt="No image" 
+                                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                                </td>
+                                                <td style="color: black;" th:text="${item.product.name}"></td>
+                                                <td style="color: black;">
+                                                    <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}"></span>₫
+                                                </td>
+                                                <td style="color: black;" th:text="${item.quantity}"></td>
+                                                <td style="color: black;">
+                                                    <span th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')}"></span>₫
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="table-active">
+                                                <td colspan="5" style="text-align: right; font-weight: bold; color: black;">
+                                                    <h5>Total Amount:</h5>
+                                                </td>
+                                                <td style="color: red; font-weight: bold;">
+                                                    <h5>
+                                                        <span th:text="${totalAmount != null ? #numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT') : '0'}"></span>₫
+                                                    </h5>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div th:replace="~{admin/fragments/footer :: footer}"></div>
+    </div>
+    
+    <script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+    <script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+    <script th:src="@{/assets/admin/js/custom.min.js}"></script>
+
+</body>
+
+</html>

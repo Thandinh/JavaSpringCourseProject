@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Order Management - Admin</title>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
+
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.theme.default.min.css}">
+    <link th:href="@{/assets/admin/vendor/jqvmap/css/jqvmap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/admin/css/style.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <div th:replace="~{admin/fragments/preloader :: preloader}"></div>
+    
+    <div id="main-wrapper">
+        <div th:replace="~{admin/fragments/header :: header}"></div>
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <div class="content-body">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Success/Error Messages -->
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <span th:text="${success}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${error}"></span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Order Management</h4>
+                                <span class="badge badge-primary" th:text="${totalOrders != null ? totalOrders : 0} + ' Orders'"></span>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="thead-primary">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Order Code</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Total Amount</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Order Date</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:if="${orderList == null || orderList.isEmpty()}">
+                                                <td colspan="7" class="text-center">No orders found</td>
+                                            </tr>
+                                            <tr th:each="order, iterStat : ${orderList}">
+                                                <th scope="row" th:text="${iterStat.count}"></th>
+                                                <td style="color: black; font-weight: bold;" th:text="${order.code}"></td>
+                                                <td style="color: black;" th:text="${order.user.email}"></td>
+                                                <td style="color: black;">
+                                                    <span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></span>₫
+                                                </td>
+                                                <td>
+                                                    <span th:if="${order.status.toString() == 'COMPLETED'}" class="badge badge-success" th:text="${order.status}"></span>
+                                                    <span th:if="${order.status.toString() == 'PENDING'}" class="badge badge-warning" th:text="${order.status}"></span>
+                                                    <span th:if="${order.status.toString() == 'CONFIRMED'}" class="badge badge-info" th:text="${order.status}"></span>
+                                                    <span th:if="${order.status.toString() == 'SHIPPING'}" class="badge badge-primary" th:text="${order.status}"></span>
+                                                    <span th:if="${order.status.toString() == 'CANCELLED'}" class="badge badge-danger" th:text="${order.status}"></span>
+                                                </td>
+                                                <td style="color: black;" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a th:href="@{/admin/orders/details/{id}(id=${order.id})}" 
+                                                           class="btn btn-sm btn-info" title="View Details">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <a th:href="@{/admin/orders/edit/{id}(id=${order.id})}" 
+                                                           class="btn btn-sm btn-primary" title="Edit Status">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <div th:replace="~{admin/fragments/footer :: footer}"></div>
+    </div>
+    
+    <script th:src="@{/assets/admin/vendor/global/global.min.js}"></script>
+    <script th:src="@{/assets/admin/js/quixnav-init.js}"></script>
+    <script th:src="@{/assets/admin/js/custom.min.js}"></script>
+
+</body>
+
+</html>

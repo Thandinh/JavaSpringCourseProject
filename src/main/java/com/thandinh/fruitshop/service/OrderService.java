@@ -1,6 +1,7 @@
 package com.thandinh.fruitshop.service;
 
 import com.thandinh.fruitshop.entity.Order;
+import com.thandinh.fruitshop.enums.OrderStatus;
 import com.thandinh.fruitshop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,29 @@ public class OrderService {
 
     // Tạo đơn hàng mới
     public Order createOrder(Order order) {
+        // Tạo mã đơn hàng tự động nếu chưa có
+        if (order.getCode() == null || order.getCode().isEmpty()) {
+            order.setCode(generateOrderCode());
+        }
         return orderRepository.save(order);
+    }
+
+    // Tạo mã đơn hàng
+    private String generateOrderCode() {
+        // Format: ORD-YYYYMMDD-XXXX (VD: ORD-20260303-0001)
+        String prefix = "ORD-";
+        String datePart = java.time.LocalDate.now().format(
+            java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd")
+        );
+        
+        // Lấy số đơn hàng trong ngày
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+        Long todayOrderCount = orderRepository.countOrdersByDateRange(startOfDay, endOfDay);
+        
+        String sequencePart = String.format("%04d", todayOrderCount + 1);
+        
+        return prefix + datePart + "-" + sequencePart;
     }
 
     // Cập nhật đơn hàng
@@ -56,17 +79,17 @@ public class OrderService {
     // Lấy thống kê theo trạng thái
     public Map<String, Long> getOrderStatusStatistics() {
         Map<String, Long> stats = new HashMap<>();
-        stats.put("PENDING", orderRepository.countByStatus("PENDING"));
-        stats.put("CONFIRMED", orderRepository.countByStatus("CONFIRMED"));
-        stats.put("SHIPPING", orderRepository.countByStatus("SHIPPING"));
-        stats.put("COMPLETED", orderRepository.countByStatus("COMPLETED"));
-        stats.put("CANCELLED", orderRepository.countByStatus("CANCELLED"));
+        stats.put("PENDING", orderRepository.countByStatus(OrderStatus.PENDING));
+        stats.put("CONFIRMED", orderRepository.countByStatus(OrderStatus.CONFIRMED));
+        stats.put("SHIPPING", orderRepository.countByStatus(OrderStatus.SHIPPING));
+        stats.put("COMPLETED", orderRepository.countByStatus(OrderStatus.COMPLETED));
+        stats.put("CANCELLED", orderRepository.countByStatus(OrderStatus.CANCELLED));
         return stats;
     }
 
     // Lấy tổng doanh thu đã hoàn thành
     public Double getTotalCompletedRevenue() {
-        return orderRepository.getTotalCompletedRevenue();
+        return orderRepository.getTotalRevenueByStatus(OrderStatus.COMPLETED);
     }
 
     // Lấy đơn hàng gần nhất

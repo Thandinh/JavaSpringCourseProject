@@ -1,0 +1,42 @@
+-- Add soft delete columns to all tables if not exist
+
+-- Users table
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Categories table
+ALTER TABLE categories 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Products table
+ALTER TABLE products 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Orders table
+ALTER TABLE orders 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Order Items table
+ALTER TABLE order_items 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Roles table
+ALTER TABLE roles 
+ADD COLUMN IF NOT EXISTS deleted_at DATETIME NULL,
+ADD COLUMN IF NOT EXISTS deleted_by VARCHAR(100) NULL;
+
+-- Check results
+SELECT 
+    TABLE_NAME, 
+    COLUMN_NAME, 
+    DATA_TYPE, 
+    IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_SCHEMA = 'spring_fruitshop' 
+    AND COLUMN_NAME IN ('deleted_at', 'deleted_by')
+ORDER BY TABLE_NAME, COLUMN_NAME;

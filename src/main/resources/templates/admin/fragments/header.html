@@ -5,10 +5,10 @@
 <div th:fragment="header">
     <!-- Nav header -->
     <div class="nav-header">
-        <a th:href="@{/admin/admin-home}" class="brand-logo">
-            <img class="logo-abbr" th:src="@{/assets/images/logo.webp}" alt="Brand Logo">
+        <a th:href="@{/admin/dashboard}" class="brand-logo">
+            <img class="logo-abbr" th:src="@{/assets/admin/images/logo.png}" alt="Brand Logo">
             <span class="brand-title">
-                <img class="logo-compact" th:src="@{/assets/images/logo.webp}" alt="">
+                <img class="logo-compact" th:src="@{/assets/admin/images/logo-text.png}" alt="">
                 SEA FRUITS
             </span>
         </a>
@@ -71,7 +71,7 @@
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a th:href="@{/admin/profile}" class="dropdown-item ai-icon">
+                                <a th:href="@{/admin/users/profile}" class="dropdown-item ai-icon">
                                     <i class="fa fa-user-circle text-primary"></i>
                                     <span class="ml-2">Hồ sơ</span>
                                 </a>
@@ -80,10 +80,12 @@
                                     <span class="ml-2">Cài đặt</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a th:href="@{/dang-xuat}" class="dropdown-item ai-icon">
-                                    <i class="fa fa-sign-out-alt text-danger"></i>
-                                    <span class="ml-2">Đăng xuất</span>
-                                </a>
+                                <form th:action="@{/dang-xuat}" method="post" style="margin: 0;">
+                                    <button type="submit" class="dropdown-item ai-icon" style="border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
+                                        <i class="fa fa-sign-out-alt text-danger"></i>
+                                        <span class="ml-2">Đăng xuất</span>
+                                    </button>
+                                </form>
                             </div>
                         </li>
                     </ul>

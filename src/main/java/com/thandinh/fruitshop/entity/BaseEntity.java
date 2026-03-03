@@ -93,4 +93,19 @@ public abstract class BaseEntity {
     public void setDeletedBy(String deletedBy) {
         this.deletedBy = deletedBy;
     }
+
+    // Helper methods for soft delete
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
+
+    public void softDelete(String deletedBy) {
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = deletedBy;
+    }
+
+    public void restore() {
+        this.deletedAt = null;
+        this.deletedBy = null;
+    }
 }
