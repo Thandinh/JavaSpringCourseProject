@@ -28,3 +28,8 @@ server:
   servlet:
     session:
       persistent: false  # Disable session persistence for development
+
+# JWT Configuration (CHỈ dùng cho Mobile API - Web vẫn dùng Session)
+jwt:
+  secret: fruitshop-jwt-secret-key-2026-thandinh-spring-boot-application-security
+  expiration: 86400000  # 24 hours

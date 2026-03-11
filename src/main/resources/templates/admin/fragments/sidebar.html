@@ -5,32 +5,50 @@
 <div th:fragment="sidebar" class="quixnav">
     <div class="quixnav-scroll">
         <ul class="metismenu" id="menu">
-            <li class="nav-label first">Menu Chính</li>
-            <li><a class="" th:href="@{/admin/dashboard}" aria-expanded="false"><i class="fa-solid fa-house"></i><span class="nav-text">Dashboard</span></a>
-               
-            </li>
-            <li class="nav-label">Quản lý</li>
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-brands fa-product-hunt"></i><span class="nav-text">Sản phẩm</span></a>
+            <li class="nav-label first">MENU CHÍNH</li>
+            <li><a th:href="@{/admin/dashboard}" aria-expanded="false">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span class="nav-text">Dashboard</span>
+            </a></li>
+            
+            <li class="nav-label">QUẢN LÝ</li>
+            
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <i class="fa-solid fa-apple-whole"></i>
+                <span class="nav-text">Sản phẩm</span>
+            </a>
                 <ul aria-expanded="false">
-                    <li><a th:href="@{/admin/products}">Tất cả</a></li>
-                    <li><a th:href="@{/admin/products/create}">Thêm mới</a></li>
+                    <li><a th:href="@{/admin/products}">Tất cả sản phẩm</a></li>
+                    <li><a th:href="@{/admin/products/create}">Thêm sản phẩm</a></li>
                 </ul>
             </li>
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-layer-group"></i><span class="nav-text">Danh mục</span></a>
+            
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <i class="fa-solid fa-layer-group"></i>
+                <span class="nav-text">Danh mục</span>
+            </a>
                 <ul aria-expanded="false">
-                    <li><a th:href="@{/admin/categories}">Tất cả</a></li>
-                    <li><a th:href="@{/admin/categories/create}">Thêm mới</a></li>
+                    <li><a th:href="@{/admin/categories}">Tất cả danh mục</a></li>
+                    <li><a th:href="@{/admin/categories/create}">Thêm danh mục</a></li>
                 </ul>
             </li>
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-users"></i><span class="nav-text">Người dùng</span></a>
+            
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <i class="fa-solid fa-users"></i>
+                <span class="nav-text">Người dùng</span>
+            </a>
                 <ul aria-expanded="false">
-                    <li><a th:href="@{/admin/users}">Tất cả</a></li>
-                    <li><a th:href="@{/admin/users/create}">Thêm mới</a></li>
+                    <li><a th:href="@{/admin/users}">Tất cả người dùng</a></li>
+                    <li><a th:href="@{/admin/users/create}">Thêm người dùng</a></li>
                 </ul>
             </li>
-            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="fa-solid fa-cart-arrow-down"></i><span class="nav-text">Đơn hàng</span></a>
+            
+            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="nav-text">Đơn hàng</span>
+            </a>
                 <ul aria-expanded="false">
-                    <li><a th:href="@{/admin/orders}">Tất cả</a></li>
+                    <li><a th:href="@{/admin/orders}">Tất cả đơn hàng</a></li>
                 </ul>
             </li>
             

@@ -4,6 +4,8 @@ import com.thandinh.fruitshop.entity.Order;
 import com.thandinh.fruitshop.enums.OrderStatus;
 import com.thandinh.fruitshop.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,19 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    // Lấy tất cả đơn hàng với phân trang
+    public Page<Order> getAllOrdersWithPagination(Pageable pageable) {
+        return orderRepository.findAll(pageable);
+    }
+
     // Lấy đơn hàng theo ID
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
+    }
+
+    // Lấy tất cả đơn hàng của user
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUser_IdOrderByOrderDateDesc(userId);
     }
 
     // Tạo đơn hàng mới

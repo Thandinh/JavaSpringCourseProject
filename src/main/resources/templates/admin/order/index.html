@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Order Management - Admin</title>
+    <title>Quản lý Đơn hàng - Admin</title>
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/admin/images/favicon.png}">
 
     <link rel="stylesheet" th:href="@{/assets/admin/vendor/owl-carousel/css/owl.carousel.min.css}">
@@ -45,9 +45,19 @@
                         </div>
                         
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Order Management</h4>
-                                <span class="badge badge-primary" th:text="${totalOrders != null ? totalOrders : 0} + ' Orders'"></span>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="card-title">Quản lý Đơn hàng 
+                                    <span th:if="${totalItems != null}" class="badge badge-primary" th:text="${totalItems}">0</span>
+                                </h4>
+                                <div>
+                                    <select class="form-control form-control-sm d-inline-block" style="width: auto;" 
+                                            onchange="window.location.href='/admin/orders?page=0&size=' + this.value">
+                                        <option th:value="5" th:selected="${pageSize == 5}">5 / trang</option>
+                                        <option th:value="10" th:selected="${pageSize == 10}">10 / trang</option>
+                                        <option th:value="20" th:selected="${pageSize == 20}">20 / trang</option>
+                                        <option th:value="50" th:selected="${pageSize == 50}">50 / trang</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -55,20 +65,20 @@
                                         <thead class="thead-primary">
                                             <tr>
                                                 <th scope="col">#</th>
-                                                <th scope="col">Order Code</th>
-                                                <th scope="col">Customer</th>
-                                                <th scope="col">Total Amount</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Order Date</th>
-                                                <th scope="col">Actions</th>
+                                                <th scope="col">Mã đơn hàng</th>
+                                                <th scope="col">Khách hàng</th>
+                                                <th scope="col">Tổng tiền</th>
+                                                <th scope="col">Trạng thái</th>
+                                                <th scope="col">Ngày đặt</th>
+                                                <th scope="col">Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr th:if="${orderList == null || orderList.isEmpty()}">
-                                                <td colspan="7" class="text-center">No orders found</td>
+                                                <td colspan="7" class="text-center">Không có đơn hàng nào</td>
                                             </tr>
                                             <tr th:each="order, iterStat : ${orderList}">
-                                                <th scope="row" th:text="${iterStat.count}"></th>
+                                                <th scope="row" th:text="${currentPage * pageSize + iterStat.count}"></th>
                                                 <td style="color: black; font-weight: bold;" th:text="${order.code}"></td>
                                                 <td style="color: black;" th:text="${order.user.email}"></td>
                                                 <td style="color: black;">
@@ -85,11 +95,11 @@
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         <a th:href="@{/admin/orders/details/{id}(id=${order.id})}" 
-                                                           class="btn btn-sm btn-info" title="View Details">
+                                                           class="btn btn-sm btn-info" title="Xem chi tiết">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
                                                         <a th:href="@{/admin/orders/edit/{id}(id=${order.id})}" 
-                                                           class="btn btn-sm btn-primary" title="Edit Status">
+                                                           class="btn btn-sm btn-primary" title="Sửa trạng thái">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                     </div>
@@ -97,6 +107,32 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div th:if="${totalPages != null and totalPages > 1}" class="d-flex justify-content-between align-items-center mt-3">
+                                    <div>
+                                        <span>Hiển thị <b th:text="${currentPage * pageSize + 1}">1</b> đến 
+                                            <b th:text="${(currentPage + 1) * pageSize > totalItems ? totalItems : (currentPage + 1) * pageSize}">10</b> 
+                                            trong tổng số <b th:text="${totalItems}">0</b> đơn hàng</span>
+                                    </div>
+                                    <nav>
+                                        <ul class="pagination mb-0">
+                                            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                                                <a class="page-link" th:href="@{/admin/orders(page=${currentPage - 1}, size=${pageSize})}">Trước</a>
+                                            </li>
+                                            
+                                            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                                                class="page-item" 
+                                                th:classappend="${i == currentPage ? 'active' : ''}">
+                                                <a class="page-link" th:href="@{/admin/orders(page=${i}, size=${pageSize})}" th:text="${i + 1}">1</a>
+                                            </li>
+                                            
+                                            <li class="page-item" th:classappend="${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+                                                <a class="page-link" th:href="@{/admin/orders(page=${currentPage + 1}, size=${pageSize})}">Sau</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
                         </div>

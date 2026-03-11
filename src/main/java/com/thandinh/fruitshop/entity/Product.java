@@ -2,8 +2,15 @@ package com.thandinh.fruitshop.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product extends BaseEntity {
@@ -35,66 +42,13 @@ public class Product extends BaseEntity {
     @JsonIgnore
     private List<OrderItem> orderItems;
 
-    public Product() {}
-
-    public String getName() {
-        return name;
-    }
-
+    // Custom setter để auto-generate slug
     public void setName(String name) {
         this.name = name;
         // Auto-generate slug from name
         if (name != null) {
             this.slug = generateSlug(name);
         }
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getPricesale() {
-        return pricesale;
-    }
-
-    public void setPricesale(Double pricesale) {
-        this.pricesale = pricesale;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     /**
@@ -123,22 +77,6 @@ public class Product extends BaseEntity {
         
         // Otherwise, assume it's a legacy image in /assets/images/
         return "/assets/images/" + imageUrl;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
     }
 
     // Helper method to generate slug from name

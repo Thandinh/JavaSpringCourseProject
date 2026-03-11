@@ -1,6 +1,7 @@
 package com.thandinh.fruitshop.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -9,6 +10,21 @@ import java.nio.file.Paths;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    /**
+     * Configure CORS to allow mobile app to call API
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+                .allowedOrigins("*") // Allow all origins (for development)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(false)
+                .maxAge(3600);
+        
+        System.out.println("✅ CORS enabled for /api/** endpoints - Mobile app can now call API");
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

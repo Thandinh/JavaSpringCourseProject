@@ -1,6 +1,9 @@
 package com.thandinh.fruitshop.service;
 
 import com.thandinh.fruitshop.entity.Category;
+import com.thandinh.fruitshop.exception.BadRequestException;
+import com.thandinh.fruitshop.exception.DuplicateResourceException;
+import com.thandinh.fruitshop.exception.ResourceNotFoundException;
 import com.thandinh.fruitshop.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -44,11 +47,11 @@ public class CategoryService {
      */
     public Category create(Category category) {
         if (category.getName() == null || category.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be empty");
+            throw new BadRequestException("Category name cannot be empty");
         }
         
         if (categoryRepository.existsByName(category.getName().trim())) {
-            throw new IllegalArgumentException("Category with name '" + category.getName() + "' already exists");
+            throw new DuplicateResourceException("Category", "name", category.getName());
         }
         
         category.setName(category.getName().trim());
@@ -63,15 +66,15 @@ public class CategoryService {
      */
     public Category update(Long id, Category categoryDetails) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         
         if (categoryDetails.getName() == null || categoryDetails.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be empty");
+            throw new BadRequestException("Category name cannot be empty");
         }
         
         String newName = categoryDetails.getName().trim();
         if (!category.getName().equals(newName) && categoryRepository.existsByNameAndIdNot(newName, id)) {
-            throw new IllegalArgumentException("Category with name '" + newName + "' already exists");
+            throw new DuplicateResourceException("Category", "name", newName);
         }
         
         category.setName(newName);
@@ -86,11 +89,11 @@ public class CategoryService {
      */
     public void delete(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
         
         // Check if category has products
         if (category.getProducts() != null && !category.getProducts().isEmpty()) {
-            throw new IllegalArgumentException("Cannot delete category with existing products. Please reassign or delete products first.");
+            throw new BadRequestException("Cannot delete category with existing products. Please reassign or delete products first.");
         }
         
         categoryRepository.deleteById(id);

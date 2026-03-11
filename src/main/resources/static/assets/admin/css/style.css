@@ -8060,7 +8060,8 @@ a {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #343957;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: all .2s ease;
   z-index: 4; }
   .nav-header .logo-abbr {
@@ -8079,11 +8080,12 @@ a {
     width: 100%;
     justify-content: flex-start;
     align-items: center;
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     color: #fff;
     text-decoration: none;
-    padding-left: 1.25rem;
-    font-weight: 700; }
+    padding-left: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.5px; }
     [data-sidebar-style="compact"] .nav-header .brand-logo,
     [data-sidebar-style="mini"] .nav-header .brand-logo {
       padding-left: 0;
@@ -10288,11 +10290,16 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   padding-right: 9.375rem; }
 
 .nav-label {
-  margin: 0px 25px 0;
-  padding: 1.5625rem 0 10px;
+  margin: 0px 20px 0;
+  padding: 1.25rem 0 0.5rem;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05rem; }
+  font-size: 0.7rem;
+  letter-spacing: 0.08rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem; }
 
 .nav-badge {
   position: absolute;
@@ -10313,10 +10320,10 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   height: 100%;
   position: absolute;
   top: 5rem;
-  padding-top: 0;
+  padding-top: 1rem;
   z-index: 2;
-  background-color: #343957;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.25);
   transition: all .2s ease; }
   .quixnav .quixnav-scroll {
     position: relative;
@@ -10340,18 +10347,36 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
       display: flex;
       flex-direction: column; }
       .quixnav .metismenu > li a > i {
-        font-size: 1.125rem;
+        font-size: 1.2rem;
         display: inline-block;
         vertical-align: middle;
-        padding: 0 0.4375rem;
+        padding: 0 0.5rem;
         font-weight: 700;
         position: relative;
-        top: -2px; }
+        top: -2px;
+        color: #3498db !important;
+        min-width: 32px;
+        text-align: center; }
       .quixnav .metismenu > li > a {
-        color: #bdbdc7; }
-      .quixnav .metismenu > li:hover > a, .quixnav .metismenu > li:focus > a, .quixnav .metismenu > li.mm-active > a {
-        background-color: #6b51df;
-        color: #fff; }
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 15px;
+        font-weight: 500;
+        padding: 0.9rem 1.25rem;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        border-radius: 8px;
+        margin: 2px 8px; }
+      .quixnav .metismenu > li:hover > a, .quixnav .metismenu > li:focus > a {
+        background-color: rgba(52, 152, 219, 0.15);
+        color: #fff;
+        border-left: 3px solid #3498db;
+        transform: translateX(3px); }
+      .quixnav .metismenu > li.mm-active > a {
+        background-color: rgba(52, 152, 219, 0.25);
+        color: #fff;
+        border-left: 3px solid #3498db;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
       .quixnav .metismenu > li.mm-active ul {
         background-color: rgba(88, 115, 254, 0.04); }
         .quixnav .metismenu > li.mm-active ul ul {
@@ -10359,14 +10384,38 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
     .quixnav .metismenu li {
       position: relative; }
     .quixnav .metismenu ul {
-      background-color: #1c0f54;
-      transition: all .2s ease-in-out; }
+      background-color: rgba(0, 0, 0, 0.25);
+      transition: all .2s ease-in-out;
+      border-radius: 8px;
+      margin: 4px 12px;
+      overflow: hidden; }
       .quixnav .metismenu ul a {
         padding-left: 54px;
-        font-weight: 300; }
-        .quixnav .metismenu ul a:hover, .quixnav .metismenu ul a:focus, .quixnav .metismenu ul a.mm-active {
+        font-weight: 400;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        padding-top: 0.65rem;
+        padding-bottom: 0.65rem;
+        position: relative; }
+        .quixnav .metismenu ul a:before {
+          content: "";
+          position: absolute;
+          left: 42px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 5px;
+          height: 5px;
+          background: #3498db;
+          border-radius: 50%; }
+        .quixnav .metismenu ul a:hover, .quixnav .metismenu ul a:focus {
           text-decoration: none;
-          color: #fff; }
+          color: #fff;
+          background-color: rgba(52, 152, 219, 0.15);
+          padding-left: 58px; }
+        .quixnav .metismenu ul a.mm-active {
+          color: #fff;
+          background-color: rgba(52, 152, 219, 0.2);
+          font-weight: 600; }
         [direction="rtl"] .quixnav .metismenu ul a {
           padding-right: 54px; }
       .quixnav .metismenu ul ul a {

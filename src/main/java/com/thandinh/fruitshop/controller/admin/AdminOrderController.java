@@ -6,6 +6,10 @@ import com.thandinh.fruitshop.enums.OrderStatus;
 import com.thandinh.fruitshop.service.OrderService;
 import com.thandinh.fruitshop.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +32,24 @@ public class AdminOrderController {
     private OrderItemService orderItemService;
 
     /**
-     * Display list of all orders
+     * Display list of all orders with pagination
      */
     @GetMapping
-    public String index(Model model) {
+    public String index(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
         try {
-            List<Order> orderList = orderService.getAllOrders();
-            model.addAttribute("orderList", orderList);
-            model.addAttribute("totalOrders", orderList.size());
+            // Tạo Pageable với sắp xếp theo ngày đặt hàng giảm dần
+            Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate").descending());
+            Page<Order> orderPage = orderService.getAllOrdersWithPagination(pageable);
+            
+            model.addAttribute("orderList", orderPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", orderPage.getTotalPages());
+            model.addAttribute("totalItems", orderPage.getTotalElements());
+            model.addAttribute("pageSize", size);
+            
             return "admin/order/index";
         } catch (Exception e) {
             model.addAttribute("error", "Error loading orders: " + e.getMessage());

@@ -11,6 +11,9 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    // Tìm tất cả đơn hàng của user theo userId
+    List<Order> findByUser_IdOrderByOrderDateDesc(Long userId);
+
     // Tính tổng doanh thu trong khoảng thời gian
     @Query("SELECT COALESCE(SUM(o.totalAmount), 0.0) FROM Order o WHERE o.orderDate BETWEEN :startDate AND :endDate")
     Double getTotalRevenueByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);

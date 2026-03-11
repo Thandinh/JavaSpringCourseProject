@@ -6,10 +6,11 @@
     <!-- Nav header -->
     <div class="nav-header">
         <a th:href="@{/admin/dashboard}" class="brand-logo">
-            <img class="logo-abbr" th:src="@{/assets/admin/images/logo.png}" alt="Brand Logo">
-            <span class="brand-title">
-                <img class="logo-compact" th:src="@{/assets/admin/images/logo-text.png}" alt="">
-                SEA FRUITS
+            <img class="logo-abbr" th:src="@{/assets/admin/images/logo.png}" alt="Brand Logo" 
+                 style="max-width: 45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
+            <span class="brand-title" style="display: flex; flex-direction: column; line-height: 1.3;">
+                <span style="font-size: 20px; font-weight: 800; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">SEA FRUITS</span>
+                <span style="font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.8); letter-spacing: 1px;">ADMIN PANEL</span>
             </span>
         </a>
 
@@ -62,28 +63,49 @@
 
                         <!-- User Profile -->
                         <li class="nav-item dropdown header-profile">
-                            <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                <img th:src="${session.user != null && session.user.avatar != null && !session.user.avatar.isEmpty() ? (session.user.avatar.startsWith('/') || session.user.avatar.startsWith('http') ? session.user.avatar : '/' + session.user.avatar) : '/assets/admin/images/profile/pic1.jpg'}" 
-                                     width="20" alt="User Avatar"/>
-                                <div class="header-info">
-                                    <span class="text-black" th:text="${session.user != null ? session.user.fullName : 'Admin'}">Admin</span>
-                                    <p class="fs-12 mb-0">Quản trị viên</p>
+                            <a class="nav-link d-flex align-items-center" href="#" role="button" data-toggle="dropdown">
+                                <!-- Avatar or Icon -->
+                                <div th:if="${session.user != null && session.user.avatar != null && !session.user.avatar.isEmpty()}" 
+                                     class="position-relative">
+                                    <img th:src="${session.user.avatar.startsWith('/') || session.user.avatar.startsWith('http') ? session.user.avatar : '/' + session.user.avatar}" 
+                                         class="rounded-circle" width="40" height="40" alt="Avatar"
+                                         style="object-fit: cover; border: 2px solid #e3e6f0;"/>
                                 </div>
+                                <div th:unless="${session.user != null && session.user.avatar != null && !session.user.avatar.isEmpty()}" 
+                                     class="rounded-circle bg-primary d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px; border: 2px solid #e3e6f0;">
+                                    <i class="mdi mdi-account text-white" style="font-size: 24px;"></i>
+                                </div>
+                                <div class="header-info ml-2">
+                                    <span class="text-dark font-weight-500 d-none d-lg-block" 
+                                          th:text="${session.user != null ? session.user.fullName : 'Admin'}" 
+                                          style="font-size: 14px; line-height: 1.2;">Admin</span>
+                                </div>
+                                <i class="mdi mdi-chevron-down ml-2" style="font-size: 18px;"></i>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a th:href="@{/admin/users/profile}" class="dropdown-item ai-icon">
-                                    <i class="fa fa-user-circle text-primary"></i>
-                                    <span class="ml-2">Hồ sơ</span>
+                            <div class="dropdown-menu dropdown-menu-right shadow-sm" 
+                                 style="min-width: 180px; border-radius: 4px; margin-top: 10px;">
+                                <!-- Profile -->
+                                <a th:href="@{/admin/users/profile}" 
+                                   class="dropdown-item d-flex align-items-center" 
+                                   style="padding: 12px 20px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-circle mr-3" viewBox="0 0 16 16" style="color: #4e73df;">
+                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                    </svg>
+                                    <span style="font-size: 14px;">Hồ sơ</span>
                                 </a>
-                                <a th:href="@{/admin/settings}" class="dropdown-item ai-icon">
-                                    <i class="fa fa-cog text-info"></i>
-                                    <span class="ml-2">Cài đặt</span>
-                                </a>
-                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-divider" style="margin: 0;"></div>
+                                <!-- Logout -->
                                 <form th:action="@{/dang-xuat}" method="post" style="margin: 0;">
-                                    <button type="submit" class="dropdown-item ai-icon" style="border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
-                                        <i class="fa fa-sign-out-alt text-danger"></i>
-                                        <span class="ml-2">Đăng xuất</span>
+                                    <button type="submit" 
+                                            class="dropdown-item d-flex align-items-center" 
+                                            style="padding: 12px 20px; border: none; background: none; width: 100%; text-align: left; cursor: pointer;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-right mr-3" viewBox="0 0 16 16" style="color: #e74a3b;">
+                                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                        </svg>
+                                        <span style="font-size: 14px;">Đăng xuất</span>
                                     </button>
                                 </form>
                             </div>

@@ -4,6 +4,10 @@ import com.thandinh.fruitshop.dto.LoginDTO;
 import com.thandinh.fruitshop.dto.RegisterDTO;
 import com.thandinh.fruitshop.entity.Role;
 import com.thandinh.fruitshop.entity.User;
+import com.thandinh.fruitshop.exception.BadRequestException;
+import com.thandinh.fruitshop.exception.DuplicateResourceException;
+import com.thandinh.fruitshop.exception.ForbiddenException;
+import com.thandinh.fruitshop.exception.UnauthorizedException;
 import com.thandinh.fruitshop.repository.RoleRepository;
 import com.thandinh.fruitshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,25 +42,25 @@ public class AuthService {
      * Đăng ký tài khoản mới
      */
     @Transactional
-    public User register(RegisterDTO registerDTO) throws Exception {
+    public User register(RegisterDTO registerDTO) {
         // 1. Kiểm tra email đã tồn tại chưa (chỉ check user chưa bị xóa)
         if (userRepository.findByEmailAndDeletedAtIsNull(registerDTO.getEmail()).isPresent()) {
-            throw new Exception("Email này đã được đăng ký!");
+            throw new DuplicateResourceException("Email này đã được đăng ký!");
         }
 
         // 2. Kiểm tra email phải là Gmail
         if (!isGmail(registerDTO.getEmail())) {
-            throw new Exception("Vui lòng sử dụng địa chỉ Gmail để đăng ký!");
+            throw new BadRequestException("Vui lòng sử dụng địa chỉ Gmail để đăng ký!");
         }
 
         // 3. Kiểm tra mật khẩu khớp nhau
         if (!registerDTO.getPassword().equals(registerDTO.getPasswordConfirmation())) {
-            throw new Exception("Mật khẩu nhập lại không khớp!");
+            throw new BadRequestException("Mật khẩu nhập lại không khớp!");
         }
 
         // 4. Kiểm tra độ dài mật khẩu
         if (registerDTO.getPassword().length() < 6) {
-            throw new Exception("Mật khẩu phải có ít nhất 6 ký tự!");
+            throw new BadRequestException("Mật khẩu phải có ít nhất 6 ký tự!");
         }
 
         // 5. Tạo user mới
@@ -89,24 +93,24 @@ public class AuthService {
      * Đăng nhập (dùng cho API)
      * Note: Web form login sử dụng Spring Security
      */
-    public User login(LoginDTO loginDTO) throws Exception {
+    public User login(LoginDTO loginDTO) {
         // 1. Tìm user theo email (chỉ user chưa bị xóa)
         Optional<User> userOptional = userRepository.findByEmailAndDeletedAtIsNull(loginDTO.getEmail());
         
         if (userOptional.isEmpty()) {
-            throw new Exception("Email hoặc mật khẩu không đúng!");
+            throw new UnauthorizedException("Email hoặc mật khẩu không đúng!");
         }
 
         User user = userOptional.get();
 
         // 2. Kiểm tra tài khoản có bị khóa không
         if (!user.getEnabled()) {
-            throw new Exception("Tài khoản của bạn đã bị khóa!");
+            throw new ForbiddenException("Tài khoản của bạn đã bị khóa!");
         }
 
         // 3. Kiểm tra mật khẩu
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            throw new Exception("Email hoặc mật khẩu không đúng!");
+            throw new UnauthorizedException("Email hoặc mật khẩu không đúng!");
         }
 
         return user;

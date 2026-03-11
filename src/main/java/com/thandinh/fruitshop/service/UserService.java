@@ -2,6 +2,7 @@ package com.thandinh.fruitshop.service;
 
 import com.thandinh.fruitshop.entity.Role;
 import com.thandinh.fruitshop.entity.User;
+import com.thandinh.fruitshop.exception.ResourceNotFoundException;
 import com.thandinh.fruitshop.repository.RoleRepository;
 import com.thandinh.fruitshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class UserService {
                           String phone, String address, String roleName, Boolean enabled) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
-            throw new RuntimeException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
 
         User user = userOpt.get();
@@ -144,7 +145,7 @@ public class UserService {
             System.out.println("=== UserService.softDelete: User saved successfully");
         } else {
             System.err.println("=== UserService.softDelete: User not found with id: " + id);
-            throw new RuntimeException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
     }
 
@@ -156,7 +157,7 @@ public class UserService {
             user.restore();
             userRepository.save(user);
         } else {
-            throw new RuntimeException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
     }
 

@@ -1,10 +1,16 @@
 package com.thandinh.fruitshop.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "categories")
 public class Category extends BaseEntity {
@@ -15,22 +21,4 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Product> products;
-
-    public Category() {}
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
