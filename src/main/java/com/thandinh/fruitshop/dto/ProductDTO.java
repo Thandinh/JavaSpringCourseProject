@@ -22,6 +22,8 @@ public class ProductDTO {
     private String categoryName;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Double averageRating;
+    private Long totalReviews;
 
     public ProductDTO(Long id, String name, String slug, String description, Double price, Double pricesale, 
                      Integer quantity, String imageUrl, Long categoryId, String categoryName) {
@@ -35,5 +37,7 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.averageRating = 0.0;
+        this.totalReviews = 0L;
     }
 }

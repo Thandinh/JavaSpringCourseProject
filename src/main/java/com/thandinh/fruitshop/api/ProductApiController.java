@@ -2,6 +2,7 @@ package com.thandinh.fruitshop.api;
 
 import com.thandinh.fruitshop.dto.ProductDTO;
 import com.thandinh.fruitshop.entity.Product;
+import com.thandinh.fruitshop.repository.ProductReviewRepository;
 import com.thandinh.fruitshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,9 @@ public class ProductApiController {
 
     @Autowired
     private ProductService productService;
+    
+    @Autowired
+    private ProductReviewRepository reviewRepository;
 
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
@@ -133,7 +137,7 @@ public class ProductApiController {
             slug = "";
         }
         
-        return new ProductDTO(
+        ProductDTO dto = new ProductDTO(
                 product.getId(),
                 product.getName(),
                 slug,
@@ -145,5 +149,13 @@ public class ProductApiController {
                 product.getCategory() != null ? product.getCategory().getId() : null,
                 product.getCategory() != null ? product.getCategory().getName() : null
         );
+        
+        // Add rating info
+        Double avgRating = reviewRepository.getAverageRating(product.getId());
+        Long totalReviews = reviewRepository.getReviewCount(product.getId());
+        dto.setAverageRating(avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0);
+        dto.setTotalReviews(totalReviews != null ? totalReviews : 0L);
+        
+        return dto;
     }
 }
