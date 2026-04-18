@@ -61,6 +61,9 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/api/**") // Disable CSRF for API endpoints
             )
             .authorizeHttpRequests(authorize -> authorize
+                // Admin API routes - require ADMIN role
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                 // Public routes
                 .requestMatchers(
                     "/",
