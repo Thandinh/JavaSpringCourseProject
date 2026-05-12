@@ -115,10 +115,6 @@
 - DELETE `/api/admin/products/{id}`
   - Nơi gọi: [src/main/resources/templates/admin/product/index.html](src/main/resources/templates/admin/product/index.html)
 
-### Lưu ý
-- Có file JS demo gọi API ngoài (không phải backend):
-  - [src/main/resources/static/assets/admin/js/plugins-init/select2-init.js](src/main/resources/static/assets/admin/js/plugins-init/select2-init.js) gọi `https://api.github.com/search/repositories`
-
 ## API cho mobile (JWT)
 Base URL: `http://localhost:8080/api`
 
