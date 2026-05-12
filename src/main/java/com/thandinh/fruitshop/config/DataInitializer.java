@@ -42,14 +42,14 @@ public class DataInitializer implements CommandLineRunner {
         roleRepository.findByName("USER").ifPresent(oldRole -> {
             oldRole.setName("ROLE_USER");
             roleRepository.save(oldRole);
-            System.out.println("✅ Migrated role: USER -> ROLE_USER");
+            System.out.println("Migrated role: USER -> ROLE_USER");
         });
         
         // Migrate OLD "ADMIN" to "ROLE_ADMIN"
         roleRepository.findByName("ADMIN").ifPresent(oldRole -> {
             oldRole.setName("ROLE_ADMIN");
             roleRepository.save(oldRole);
-            System.out.println("✅ Migrated role: ADMIN -> ROLE_ADMIN");
+            System.out.println("Migrated role: ADMIN -> ROLE_ADMIN");
         });
     }
 
